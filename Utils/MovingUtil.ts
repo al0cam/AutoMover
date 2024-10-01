@@ -19,12 +19,14 @@ class MovingUtil {
   }
 
   public isFile(path: string): boolean {
+    let something =  this.app.vault.getAbstractFileByPath(path);
     return this.app.vault.getAbstractFileByPath(path) instanceof TFile;
   }
 
   public isFolder(path: string): boolean {
     return this.app.vault.getAbstractFileByPath(path) instanceof TFolder;
   }
+
 
   public moveFile(file: TFile, newPath: string): void {
     if(this.isFolder(newPath)) {
@@ -43,7 +45,6 @@ class MovingUtil {
       console.error("Invalid destination path\n" + newPath + "is not a folder!");
     }
   }
-
 }
 
 const movingUtil = MovingUtil.getInstance();
