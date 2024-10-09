@@ -24,7 +24,7 @@ export default class AutoMoverPlugin extends Plugin {
     console.log(this.settings);
   }
 
-  asyncloadSettings() {
+  async asyncloadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
   }
 
