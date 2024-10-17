@@ -6,3 +6,38 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.moving_rules_container {
+  padding: 0.75em 0;
+  border-top: 1px solid var(--background-modifier-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.rule {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 0.5em;
+  justify-content: space-evenly;
+}
+
+.rule_header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.rule_title {
+  padding: 0.5em;
+  width: 100%;
+}
+
+.rule_input {
+  width: 100%;
+  padding: 0.5em;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 0.25em;
+}

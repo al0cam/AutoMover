@@ -3,6 +3,7 @@ class MovingRule {
   /**
    * This filed is used for defining the regex with its group matchers
    * TODO: Maybe it should be turned into a RegExp object
+   * will try with string for now
    */
   private _regex: string;
   /**

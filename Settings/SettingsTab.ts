@@ -55,12 +55,41 @@ export class SettingsTab extends PluginSettingTab{
           await this.plugin.saveData(this.plugin.settings);
         }));
 
+
+// TODO: ipmplement button to add new rules with empty fields
+// TODO: add button to remove rules
+
     // custom definition of settings list
     // list of items which should be dynamic
-    let movingRules = containerEl.createEl('div', {cls: 'setting-item'});
-    movingRules.createEl('h2', {text: 'Regex moving rules',});
-    movingRules.createEl('div');
 
+    /**
+     * instead of using the default .setting-item class I created a custom class to add other styling,
+     * with the inclusion of the relevant styles from the .setting-item class
+     */
+    let movingRulesContainer = containerEl.createEl('div', {cls: 'moving_rules_container'});
+      let header = movingRulesContainer.createEl('div', {cls: 'rule_header'});
+        header.createEl('h2', {text: 'Regex moving rules',});
+        header.createEl('button', {text: '+',});
+
+      let ruleList = movingRulesContainer.createEl('div');
+
+        // Inputs for the moving rules
+        let ruleHeader = ruleList.createEl('div', {cls: 'rule'});
+          ruleHeader.createEl('p', {text: "Regex", cls: 'rule_title'});
+          ruleHeader.createEl('p', {text: "Folder", cls: 'rule_title'});
+
+        let child = ruleList.createEl('div', {cls: 'rule'});
+          child.createEl('input', {value: 'something', cls:'rule_input'});
+          child.createEl('input', {value: 'something', cls:'rule_input'});
+
+        /**
+         * List of rules
+         */
+        for (let rule of this.plugin.settings.movingRules) {
+          let child = ruleList.createEl('div', {cls: 'rule'});
+            child.createEl('input', {value: rule.regex, cls: 'rule_input'});
+            child.createEl('input', {value: rule.folder, cls: 'rule_input' });
+        }
   }
 
 }
