@@ -1,4 +1,5 @@
 import AutoMoverPlugin from "main";
+import { MovingRule } from "Models/MovingRule";
 import { App, PluginSettingTab, Setting } from "obsidian";
 
 export class SettingsTab extends PluginSettingTab{
@@ -55,9 +56,9 @@ export class SettingsTab extends PluginSettingTab{
           await this.plugin.saveData(this.plugin.settings);
         }));
 
-
-// TODO: ipmplement button to add new rules with empty fields
-// TODO: add button to remove rules
+// TODO: add explanation for the user on how to use stuff and what it does
+// TODO: explain that they can use regex groups to move files to different folders where they can use regex groups in the folder names
+// TODO: fix css so that inputs and titles are aligned
 
     // custom definition of settings list
     // list of items which should be dynamic
@@ -69,27 +70,44 @@ export class SettingsTab extends PluginSettingTab{
     let movingRulesContainer = containerEl.createEl('div', {cls: 'moving_rules_container'});
       let header = movingRulesContainer.createEl('div', {cls: 'rule_header'});
         header.createEl('h2', {text: 'Regex moving rules',});
-        header.createEl('button', {text: '+',});
+        let addButton = header.createEl('button', {text: '+', cls: 'rule_button'});
+        addButton.addEventListener('click', () => {
+          this.plugin.settings.movingRules.push(new MovingRule());
+          // this is used to rerender the settings tab
+          this.display();
+        });
 
       let ruleList = movingRulesContainer.createEl('div');
 
-        // Inputs for the moving rules
-        let ruleHeader = ruleList.createEl('div', {cls: 'rule'});
+        /**
+         * Header of the rules
+         */
+        let ruleHeader = ruleList.createEl('div', {cls: 'rule margig_right'});
           ruleHeader.createEl('p', {text: "Regex", cls: 'rule_title'});
           ruleHeader.createEl('p', {text: "Folder", cls: 'rule_title'});
-
-        let child = ruleList.createEl('div', {cls: 'rule'});
-          child.createEl('input', {value: 'something', cls:'rule_input'});
-          child.createEl('input', {value: 'something', cls:'rule_input'});
 
         /**
          * List of rules
          */
         for (let rule of this.plugin.settings.movingRules) {
           let child = ruleList.createEl('div', {cls: 'rule'});
-            child.createEl('input', {value: rule.regex, cls: 'rule_input'});
-            child.createEl('input', {value: rule.folder, cls: 'rule_input' });
+            child.createEl('input', {value: rule.regex, cls: 'rule_input'})
+            .onchange = (e) => {
+              rule.regex = (e.target as HTMLInputElement).value;
+              this.plugin.settings.movingRules.map(r => r === rule ? rule : r);
+              this.plugin.saveData(this.plugin.settings);
+            };
+            child.createEl('input', {value: rule.folder, cls: 'rule_input' })
+            .onchange = (e) => {
+              rule.folder = (e.target as HTMLInputElement).value;
+              this.plugin.settings.movingRules.map(r => r === rule ? rule : r);
+              this.plugin.saveData(this.plugin.settings);
+            };
+            let deleteButton = child.createEl('button', {text: 'x', cls: 'rule_button rule_button_remove' });
+            deleteButton.addEventListener('click', () => {
+              this.plugin.settings.movingRules = this.plugin.settings.movingRules.filter(r => r !== rule);
+              this.display();
+            });
         }
   }
-
 }

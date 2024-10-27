@@ -1,5 +1,5 @@
 
-class MovingRule {
+export class MovingRule {
   /**
    * This filed is used for defining the regex with its group matchers
    * TODO: Maybe it should be turned into a RegExp object
@@ -12,9 +12,9 @@ class MovingRule {
    */
   private _folder: string;
 
-  constructor(regex: string, folder: string) {
-    this._regex = regex;
-    this._folder = folder;
+  constructor(regex?: string, folder?: string) {
+    this._regex = regex || '';
+    this._folder = folder || '';
   }
   public get regex(): string {
     return this._regex;

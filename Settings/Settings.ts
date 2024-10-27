@@ -1,4 +1,5 @@
 import AutoMoverPlugin from "main";
+import { MovingRule } from "Models/MovingRule";
 
 export interface AutoMoverSettings {
   moveOnOpen: boolean,

@@ -20,6 +20,7 @@ If your plugin does not need CSS, delete this file.
   align-items: center;
   margin-bottom: 0.5em;
   justify-content: space-evenly;
+  gap: 0.5em;
 }
 
 .rule_header {
@@ -41,3 +42,20 @@ If your plugin does not need CSS, delete this file.
   border: 1px solid var(--background-modifier-border);
   border-radius: 0.25em;
 }
+
+.rule_button {
+  cursor: pointer;
+}
+
+.rule_button:hover {
+  background-color: var(--color-green);
+}
+
+.rule_button:active {
+  background-color: var(--background-modifier-active);
+}
+
+.rule_button_remove:hover {
+  background-color: var(--color-red)!important;
+}
+
