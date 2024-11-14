@@ -2,6 +2,7 @@ import { Plugin, TFile } from "obsidian";
 import { AutoMoverSettings, DEFAULT_SETTINGS } from "Settings/Settings";
 import { SettingsTab } from "Settings/SettingsTab";
 import movingUtil from "Utils/MovingUtil";
+import ruleMatcherUtil from "Utils/RuleMatcherUtil";
 
 export default class AutoMoverPlugin extends Plugin {
   settings: AutoMoverSettings;
@@ -9,19 +10,43 @@ export default class AutoMoverPlugin extends Plugin {
   async onload() {
     console.log('loading plugin')
     movingUtil.init(this.app);
-
-    // create file
-    // let newFile: TFile;
-    // if(this.app.vault.getAbstractFileByPath("Something.md") === null) {
-    //   newFile = await this.app.vault.create("./Something.md", "This is a test file")
-    // } else {
-    //   newFile = this.app.vault.getAbstractFileByPath("Something.md") as TFile;
-    // }
-    // delete file
-    // await this.app.vault.delete(this.app.vault.getAbstractFileByPath("amFolder/Something.md") as TFile);
+    /**
+     * Loading settings and creating the settings tab
+     */
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
     this.addSettingTab(new SettingsTab(this.app, this));
     console.log(this.settings);
+
+    // TODO: chec if there are any settings on when to apply the rules,
+    //       because if you arent doing on open, save, close or create, then there is no point in checking for rules
+    if(this.checkIfMovingTriggersAreEnabled() && this.checkIfThereAreRulesToApply() && this.checkIfRulesAreValid()) {
+      if(this.settings.moveOnOpen) {
+        this.registerEvent(this.app.workspace.on("file-open", (file: TFile) => {
+          if(file == null || file.path == null)
+            return;
+          console.log("File opened: ", file.path);
+          // Question: what if there are multiple rules that apply to the same file?
+          //       so far only the first one is applied and the rest are ignored
+          //       i can live with that
+
+          // TODO: what if the file is already in the correct folder?
+          //       do nothing...
+
+          // TODO: what if the folder which the file is supposed to be moved to does not exist?
+          //       create the whole path to the folder and the folder itself
+          //       having it do nothing would be conflicting with the idea to use regex groups in the first place
+
+          let rule = ruleMatcherUtil.getMatchingRule(file, this.settings.movingRules);
+          if(rule != null) {
+            // TODO: Construct the folder path using the regex groups
+            let matches = ruleMatcherUtil.getGroupMatches(file, rule);
+            console.log("Matches: ", matches);
+            console.log("Moving file to: ", rule.folder);
+            // movingUtil.moveFile(file, rule.folder);
+          }
+        }));
+      }
+    }
   }
 
   async asyncloadSettings() {
@@ -30,5 +55,29 @@ export default class AutoMoverPlugin extends Plugin {
 
   async onunload() {
     console.log('unloading plugin')
+  }
+
+  /**
+   * No point in doing anything if there is no trigger set which will cause you to move the files
+   * @returns boolean
+   */
+  checkIfMovingTriggersAreEnabled(): boolean {
+    return this.settings.moveOnClose || this.settings.moveOnCreate || this.settings.moveOnOpen || this.settings.moveOnSave;
+  }
+
+  /**
+   * If there are no rules to apply, then there is no point in checking for them
+   * @returns boolean
+   */
+  checkIfThereAreRulesToApply(): boolean {
+    return this.settings.movingRules.length > 0;
+  }
+
+  /**
+   * Superficail check if the rules are valid
+   * @returns boolean
+   */
+  checkIfRulesAreValid(): boolean {
+    return this.settings.movingRules.every(rule => rule.regex !== '' && rule.folder !== '');
   }
 }

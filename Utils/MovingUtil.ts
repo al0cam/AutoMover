@@ -1,3 +1,4 @@
+import { MovingRule } from "Models/MovingRule";
 import { App, Notice, TFile, TFolder } from "obsidian";
 
 
