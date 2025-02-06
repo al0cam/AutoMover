@@ -1,5 +1,5 @@
-import { MovingRule } from "Models/MovingRule";
-import { TFile } from "obsidian";
+import type { MovingRule } from "Models/MovingRule";
+import type { TFile } from "obsidian";
 
 class RuleMatcherUtil {
   private static instance: RuleMatcherUtil;
@@ -22,8 +22,8 @@ class RuleMatcherUtil {
    * @returns MovingRule | null
    */
   public getMatchingRule(file: TFile, rules: MovingRule[]): MovingRule | null {
-    for(let rule of rules) {
-      if(rule.regex == null || rule.regex == "") {
+    for(const rule of rules) {
+      if(rule.regex == null || rule.regex === "") {
         console.error("Rule does not have a regex: ", rule);
         continue;
       } else if(!this.isValidRegex(rule.regex)) {
@@ -48,7 +48,7 @@ class RuleMatcherUtil {
    * @returns string[]
     */
   public getGroupMatches(file: TFile, rule: MovingRule): RegExpMatchArray | null {
-    let matches = file.name.match(rule.regex);
+    const matches = file.name.match(rule.regex);
     return matches;
   }
 
@@ -73,7 +73,7 @@ class RuleMatcherUtil {
 
   // TODO: implement the distinction between named and unnamed groups
   public constructFinalDesinationPath(rule: MovingRule, matches: RegExpMatchArray): string {
-    let folderPath = rule.folder;
+    const folderPath = rule.folder;
     return folderPath;
   }
 

@@ -11,7 +11,7 @@ export class SettingsTab extends PluginSettingTab{
   }
 
   display(): void {
-    let { containerEl } = this;
+    const { containerEl } = this;
 
     // maybe not required
     containerEl.empty();
@@ -67,30 +67,30 @@ export class SettingsTab extends PluginSettingTab{
      * instead of using the default .setting-item class I created a custom class to add other styling,
      * with the inclusion of the relevant styles from the .setting-item class
      */
-    let movingRulesContainer = containerEl.createEl('div', {cls: 'moving_rules_container'});
-      let header = movingRulesContainer.createEl('div', {cls: 'rule_header'});
+    const movingRulesContainer = containerEl.createEl('div', {cls: 'moving_rules_container'});
+      const  header = movingRulesContainer.createEl('div', {cls: 'rule_header'});
         header.createEl('h2', {text: 'Regex moving rules',});
-        let addButton = header.createEl('button', {text: '+', cls: 'rule_button'});
+        const addButton = header.createEl('button', {text: '+', cls: 'rule_button'});
         addButton.addEventListener('click', () => {
           this.plugin.settings.movingRules.push(new MovingRule());
           // this is used to rerender the settings tab
           this.display();
         });
 
-      let ruleList = movingRulesContainer.createEl('div');
+      const ruleList = movingRulesContainer.createEl('div');
 
         /**
          * Header of the rules
          */
-        let ruleHeader = ruleList.createEl('div', {cls: 'rule margig_right'});
+        const ruleHeader = ruleList.createEl('div', {cls: 'rule margig_right'});
           ruleHeader.createEl('p', {text: "Regex", cls: 'rule_title'});
           ruleHeader.createEl('p', {text: "Folder", cls: 'rule_title'});
 
         /**
          * List of rules
          */
-        for (let rule of this.plugin.settings.movingRules) {
-          let child = ruleList.createEl('div', {cls: 'rule'});
+        for (const rule of this.plugin.settings.movingRules) {
+          const child = ruleList.createEl('div', {cls: 'rule'});
             child.createEl('input', {value: rule.regex, cls: 'rule_input'})
             .onchange = (e) => {
               rule.regex = (e.target as HTMLInputElement).value;
@@ -103,7 +103,7 @@ export class SettingsTab extends PluginSettingTab{
               this.plugin.settings.movingRules.map(r => r === rule ? rule : r);
               this.plugin.saveData(this.plugin.settings);
             };
-            let deleteButton = child.createEl('button', {text: 'x', cls: 'rule_button rule_button_remove' });
+            const deleteButton = child.createEl('button', {text: 'x', cls: 'rule_button rule_button_remove' });
             deleteButton.addEventListener('click', () => {
               this.plugin.settings.movingRules = this.plugin.settings.movingRules.filter(r => r !== rule);
               this.display();
