@@ -1,5 +1,12 @@
 # AutoMover plugin
 
+This plugin is used for designating folders in which your files will be moved automatically.
+It seeks to be an alternative to the "https://github.com/farux/obsidian-auto-note-mover" plugin from farux.
+The problem I had with that plugin was the lack of support for regex and regex groups in the destination paths.
+
+Therefore, this plugin supports regex and regex groups to create the destination paths unless they already exist.
+
+
 ## Releasing new releases
 
 - Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
