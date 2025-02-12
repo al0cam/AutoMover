@@ -59,3 +59,7 @@ If your plugin does not need CSS, delete this file.
   background-color: var(--color-red)!important;
 }
 
+.rule_button_duplicate:hover {
+  background-color: var(--color-blue)!important;
+}
+
