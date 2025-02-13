@@ -27,23 +27,48 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
       if (this.settings.moveOnOpen) {
         this.registerEvent(
           this.app.workspace.on("file-open", (file: obsidian.TFile) => {
-            if (file == null || file.path == null) return;
-            const rule = ruleMatcherUtil.getMatchingRule(
-              file,
-              this.settings.movingRules,
-            );
-            if (rule == null || rule.folder == null) return;
-            if (ruleMatcherUtil.isRegexGrouped(rule)) {
-              const matches = ruleMatcherUtil.getGroupMatches(file, rule);
-              const finalDestinationPath =
-                ruleMatcherUtil.constructFinalDesinationPath(rule, matches!);
-              movingUtil.moveFile(file, finalDestinationPath);
-            } else {
-              movingUtil.moveFile(file, rule.folder);
-            }
+            this.matchAndMoveFile(file);
           }),
         );
       }
+    }
+  }
+
+  /**
+   * Opens all files in the repository so that the even "file-open" is triggered
+   *
+   * @returns void
+   */
+  goThroughAllFiles() {
+    const files = this.app.vault.getFiles();
+    for (const file of files) {
+      this.matchAndMoveFile(file);
+    }
+    new obsidian.Notice("All files moved!", 5000);
+  }
+
+  /**
+   * Matches the file to the rule and moves it to the destination folder
+   *
+   * @param file - File to be matched and moved
+   * @returns void
+   */
+  matchAndMoveFile(file: obsidian.TFile): void {
+    if (file == null || file.path == null) return;
+    const rule = ruleMatcherUtil.getMatchingRule(
+      file,
+      this.settings.movingRules,
+    );
+    if (rule == null || rule.folder == null) return;
+    if (ruleMatcherUtil.isRegexGrouped(rule)) {
+      const matches = ruleMatcherUtil.getGroupMatches(file, rule);
+      const finalDestinationPath = ruleMatcherUtil.constructFinalDesinationPath(
+        rule,
+        matches!,
+      );
+      movingUtil.moveFile(file, finalDestinationPath);
+    } else {
+      movingUtil.moveFile(file, rule.folder);
     }
   }
 

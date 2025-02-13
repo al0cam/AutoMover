@@ -13,9 +13,12 @@ export class SettingsTab extends obsidian.PluginSettingTab {
   display(): void {
     const { containerEl } = this;
 
-    // maybe not required
-    containerEl.empty();
+    containerEl.createEl("h1", { text: "AutoMover settings" });
+    containerEl.createSpan({
+      text: "This plugin will move files to a specified folder based on a regex match.",
+    });
 
+    containerEl.createEl("h2", { text: "Automatic moving" });
     new obsidian.Setting(containerEl)
       .setName("Move on open")
       .setDesc("Should the file be moved when it is opened?")
@@ -25,6 +28,18 @@ export class SettingsTab extends obsidian.PluginSettingTab {
           await this.plugin.saveData(this.plugin.settings);
         }),
       );
+
+    new obsidian.Setting(containerEl)
+      .setName("Manually move")
+      .setDesc(
+        "Execute the command to go through your notes and move them according to the rules specified below.",
+      )
+      .addButton((button) => {
+        button.setButtonText("Move files");
+        button.onClick(async () => {
+          this.plugin.goThroughAllFiles();
+        });
+      });
 
     // there is no default event to move on save, therefore, i'd need to define a new one
     // running move on change could be an option, but it would produce an overhead in performance because of constant checking for changes

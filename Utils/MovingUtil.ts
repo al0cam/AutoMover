@@ -48,9 +48,6 @@ class MovingUtil {
    * @returns void
    */
   public moveFile(file: obsidian.TFile, newPath: string): void {
-    console.log(`Moving file ${file.name} to ${newPath}`);
-    // is folder is saying false for something that is clearly a folder
-    console.log(`Is folder: ${this.isFolder(newPath)}`);
     if (this.isFolder(newPath)) {
       this.app.vault.rename(file, `${newPath}/${file.name}`);
     } else {
