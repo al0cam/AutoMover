@@ -77,6 +77,40 @@ export class SettingsTab extends obsidian.PluginSettingTab {
       this.display();
     });
 
+    /**
+     * Rule description and tutorial
+     */
+    const description = movingRulesContainer.createEl("div");
+
+    description.createEl("br", {});
+    description.createEl("span", {
+      text: "You can use regex to match the file name and move it to a specified folder.",
+    });
+    description.createEl("br", {});
+    description.createSpan({
+      text: "If you have multiple rules referencing the same file, the first rule will be applied.",
+    });
+    description.createEl("br", {});
+    description.createSpan({
+      text: "	Usage of regex groups is supported. To use them in the folder name, use $1, $2, etc. to reference the group.",
+    });
+    description.createEl("br", {});
+
+    description.createEl("span", {
+      text: "Examples: ",
+    });
+
+    description.createEl("br", {});
+    const example1 = description.createDiv({ cls: "rule margig_right" });
+    example1.createEl("span", {
+      text: " ^(.*)$",
+      cls: "rule_title",
+    });
+    example1.createEl("span", {
+      text: " $1",
+      cls: "rule_title",
+    });
+
     const ruleList = movingRulesContainer.createEl("div");
 
     /**
