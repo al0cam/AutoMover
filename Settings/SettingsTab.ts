@@ -12,6 +12,7 @@ export class SettingsTab extends obsidian.PluginSettingTab {
 
   display(): void {
     const { containerEl } = this;
+    containerEl.empty();
 
     containerEl.createEl("h1", { text: "AutoMover settings" });
     containerEl.createSpan({
