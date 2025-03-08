@@ -34,6 +34,7 @@ If your plugin does not need CSS, delete this file.
 .rule_title {
   padding: 0.5em;
   width: 100%;
+  font-weight: bold;
 }
 
 .rule_input {
@@ -56,10 +57,9 @@ If your plugin does not need CSS, delete this file.
 }
 
 .rule_button_remove:hover {
-  background-color: var(--color-red)!important;
+  background-color: var(--color-red) !important;
 }
 
 .rule_button_duplicate:hover {
-  background-color: var(--color-blue)!important;
+  background-color: var(--color-blue) !important;
 }
-
