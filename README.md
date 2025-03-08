@@ -39,7 +39,7 @@ Such as you can see below:
 
 ![BeforeBasicScrollRule](https://github.com/user-attachments/assets/32b37cd2-8233-4af0-9e77-79cecb0a3c78)
 
-After you install the plugin, you can create a folder called "Scrolls" and then create a rule to move all files that start with "Scroll" to the "Scrolls" folder.
+After you install the plugin, you can create a rule to move all files that start with "Scroll" to the "Scrolls" folder.
 The rule would look like this:
 
 ![BasicScrollRule](https://github.com/user-attachments/assets/292885cf-8bac-4d9d-95f7-80aeae4ed2aa)
