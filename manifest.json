@@ -1,11 +1,11 @@
 {
-	"id": "auto-mover",
-	"name": "AutoMover",
-	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
-	"description": "Moves files with specified names into the same folder.",
-	"author": "Al0cam",
-	"authorUrl": "https://github.com/al0cam",
-	"fundingUrl": "",
-	"isDesktopOnly": false
+  "id": "auto-mover",
+  "name": "AutoMover",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Moves files with specified names into the same folder.",
+  "author": "Al0cam",
+  "authorUrl": "https://github.com/al0cam",
+  "fundingUrl": "",
+  "isDesktopOnly": false
 }
