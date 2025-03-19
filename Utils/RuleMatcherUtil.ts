@@ -86,7 +86,7 @@ class RuleMatcherUtil {
   ): string {
     let folderPath = rule.folder;
     const unnamedGroups = this.getUnnamedGroups(rule.regex);
-    // it has been asserted before that in no way this can be null because before the call, the rule and file are checked to be valid
+    // it has been asserted before that there is no way this can be null before the call, the rule and file are checked to be valid
     for (let i = 0; i < unnamedGroups!.length; i++) {
       folderPath = folderPath.replace(`$${i + 1}`, matches[i + 1] ?? "");
     }
