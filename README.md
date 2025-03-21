@@ -16,7 +16,7 @@ Also, you can use it without knowing what regex is, but it's recommended to lear
 This image shows the UI of the plugin with numbers attached to each part of the UI.
 The numbers are elaborate below the image.
 
-![Explanation](https://github.com/user-attachments/assets/e398f5dd-1f28-4416-8114-404ab72b39f9)
+![Explanation](https://github.com/user-attachments/assets/2c7ec7e0-f8e1-4f7f-ad12-c74e733be751)
 
 
 1. **Plugin location**: This is where you can access the plugin's settings.
@@ -56,7 +56,7 @@ The end result will look like this:
 Imagine that you wanted to sort each scroll by its number into a separate folder.
 You could use the following regex to achieve that:
 
-![RegexGroupingScrolls](https://github.com/user-attachments/assets/9a588831-95cd-45c7-8295-4c6fec204662)
+![RegexGroupingScrolls](https://github.com/user-attachments/assets/d2336c5c-1c14-4dd3-85a6-563aa6c8bde9)
 
 
 This will then create a folder for each scroll number and move the respective files to the correct folder.
