@@ -32,7 +32,8 @@ The numbers are elaborate below the image.
 
 ### Example without regex
 
-#### Important note: The text is case sensitive.
+#### Important note 1: The text is case sensitive.
+#### Important note 2: Use the "/" character to separate folders.
 
 Lets imagine you have three files called Scroll 1, Scroll 2 and Scroll 3.
 Such as you can see below:
@@ -63,6 +64,9 @@ This will then create a folder for each scroll number and move the respective fi
 The end result will look like this:
 
 ![RegexGroupingResult](https://github.com/user-attachments/assets/96da1cf2-0799-4984-ae5b-302d5ff35a8f)
+
+
+#### Writing Regex: The best tool for writing regex is Regex101 (https://regex101.com/)
 
 ## Contribution
 
