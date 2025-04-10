@@ -68,6 +68,11 @@ The end result will look like this:
 
 #### Writing Regex: The best tool for writing regex is Regex101 (https://regex101.com/)
 
+## Requesting features and reporting issues
+
+If you want to request a feature or report an issue, please do so by creating an issue in the issues tab of this repository.
+In case you for some reason want to contact me directly, you can do so by sending me an email which is displayed in my github profile or via LinkedIn which is also displayed in my github profile.
+
 ## Contribution
 
 If you want to contribute to this plugin, you can do so by forking this repository and creating a pull request with your changes and an elaboration what they are and why.
