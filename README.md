@@ -81,7 +81,8 @@ Thank you!
 
 ## Future plans
 
-- [ ] Add excluded folder support
-- [ ] Add excluded file support
+- [x] Add excluded folder support
+- [x] Add excluded file support
+- [x] Add regex support for excluded folders and files (must support language accents like ñ, á, š, đ, こ, 猫, etc.)
 - [ ] Add a file like .gitignore which contains all the moving rules (i am assuming the list can grow quite big for some people)
 

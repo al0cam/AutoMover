@@ -1,4 +1,5 @@
 import type AutoMoverPlugin from "main";
+import { ExclusionRule } from "Models/ExclusionRule";
 import { MovingRule } from "Models/MovingRule";
 import * as obsidian from "obsidian";
 
@@ -50,6 +51,7 @@ export class SettingsTab extends obsidian.PluginSettingTab {
     //     }),
     //   );
 
+    // TUTORIAL START
     /**
      * Instead of using the default .setting-item class I created a custom class to add other styling,
      * with the inclusion of the relevant styles from the .setting-item class
@@ -57,9 +59,7 @@ export class SettingsTab extends obsidian.PluginSettingTab {
     const tutorialContainer = containerEl.createDiv({
       cls: "moving_rules_container",
     });
-    const headerSetting = new obsidian.Setting(tutorialContainer)
-      .setName("Tutorial")
-      .setHeading();
+    new obsidian.Setting(tutorialContainer).setName("Tutorial").setHeading();
     /**
      * Rule description and tutorial
      */
@@ -97,8 +97,10 @@ export class SettingsTab extends obsidian.PluginSettingTab {
     });
     const example2 = description.createDiv({ cls: "rule margig_right" });
     example2.createSpan({ text: "Scroll (\\d+)", cls: "rule_title" });
-    example2.createSpan({ text: "Scrolls\/$1", cls: "rule_title" });
+    example2.createSpan({ text: "Scrolls/$1", cls: "rule_title" });
+    // TUTORIAL END
 
+    // MOVING RULES START
     /**
      * Header of the rules
      */
@@ -121,11 +123,11 @@ export class SettingsTab extends obsidian.PluginSettingTab {
       cls: "rule_title",
     });
 
-    const addButton = ruleHeader.createEl("button", {
+    const addRuleButton = ruleHeader.createEl("button", {
       text: "+",
       cls: "rule_button",
     });
-    addButton.addEventListener("click", () => {
+    addRuleButton.addEventListener("click", () => {
       this.plugin.settings.movingRules.push(new MovingRule());
       // this is used to rerender the settings tab
       this.display();
@@ -153,26 +155,97 @@ export class SettingsTab extends obsidian.PluginSettingTab {
         this.plugin.saveData(this.plugin.settings);
       };
 
-      const duplicateButton = child.createEl("button", {
+      const duplicateRuleButton = child.createEl("button", {
         text: "⿻",
         cls: "rule_button rule_button_duplicate",
       });
-      duplicateButton.addEventListener("click", () => {
+      duplicateRuleButton.addEventListener("click", () => {
         this.plugin.settings.movingRules.push(
           new MovingRule(rule.regex, rule.folder),
         );
         this.display();
       });
 
-      const deleteButton = child.createEl("button", {
+      const deleteRuleButton = child.createEl("button", {
         text: "x",
         cls: "rule_button rule_button_remove",
       });
-      deleteButton.addEventListener("click", () => {
+      deleteRuleButton.addEventListener("click", () => {
         this.plugin.settings.movingRules =
           this.plugin.settings.movingRules.filter((r) => r !== rule);
         this.display();
       });
     }
+    // MOVING RULES END
+
+    // EXCLUSION FOLDERS START
+    /**
+     * Header for excluded folders
+     */
+    const excludedFoldersContainer = containerEl.createDiv({
+      cls: "moving_rules_container",
+    });
+    new obsidian.Setting(excludedFoldersContainer)
+      .setName("Exclusion rules")
+      .setHeading();
+
+    const exclusionList = excludedFoldersContainer.createDiv({
+      cls: "rule_list",
+    });
+    const exclusionHeader = exclusionList.createDiv({
+      cls: "rule margig_right",
+    });
+    exclusionHeader.createEl("p", {
+      text: "Excluded folders or files (string or regex)",
+      cls: "rule_title",
+    });
+
+    const addExclusionButton = exclusionHeader.createEl("button", {
+      text: "+",
+      cls: "rule_button",
+    });
+    addExclusionButton.addEventListener("click", () => {
+      this.plugin.settings.excludedFolders.push(new ExclusionRule());
+      this.display();
+    });
+
+    /**
+     * List of excluded folders
+     */
+    for (const exclusion of this.plugin.settings.excludedFolders) {
+      const child = exclusionList.createDiv({ cls: "rule" });
+      child.createEl("input", {
+        value: exclusion.regex,
+        cls: "rule_input",
+      }).onchange = (e) => {
+        exclusion.regex = (e.target as HTMLInputElement).value;
+        this.plugin.settings.excludedFolders.map((ef) =>
+          ef === exclusion ? exclusion : ef,
+        );
+        this.plugin.saveData(this.plugin.settings);
+      };
+
+      const duplicateExclusionButton = child.createEl("button", {
+        text: "⿻",
+        cls: "rule_button rule_button_duplicate",
+      });
+      duplicateExclusionButton.addEventListener("click", () => {
+        this.plugin.settings.excludedFolders.push(
+          new ExclusionRule(exclusion.regex),
+        );
+        this.display();
+      });
+
+      const deleteExclusionButton = child.createEl("button", {
+        text: "x",
+        cls: "rule_button rule_button_remove",
+      });
+      deleteExclusionButton.addEventListener("click", () => {
+        this.plugin.settings.excludedFolders =
+          this.plugin.settings.excludedFolders.filter((r) => r !== exclusion);
+        this.display();
+      });
+    }
+    // EXCLUSION FOLDERS END
   }
 }

@@ -27,6 +27,10 @@ class RuleMatcherUtil {
         console.error("Rule does not have a regex: ", rule);
         continue;
       }
+      if (rule.folder == null || rule.folder === "") {
+        console.error("Rule does not have a destination folder: ", rule);
+        continue;
+      }
       if (!this.isValidRegex(rule.regex)) {
         console.error("Rule has an invalid regex: ", rule);
         continue;

@@ -3,6 +3,7 @@ import { SettingsTab } from "Settings/SettingsTab";
 import movingUtil from "Utils/MovingUtil";
 import ruleMatcherUtil from "Utils/RuleMatcherUtil";
 import * as obsidian from "obsidian";
+import exclusionMatcherUtil from "Utils/ExclusionMatcherUtil";
 
 export default class AutoMoverPlugin extends obsidian.Plugin {
   settings: Settings.AutoMoverSettings;
@@ -19,18 +20,20 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
       await this.loadData(),
     );
     this.addSettingTab(new SettingsTab(this.app, this));
-    if (
-      this.checkIfMovingTriggersAreEnabled() &&
-      this.checkIfThereAreRulesToApply() &&
-      this.checkIfRulesAreValid()
-    ) {
-      if (this.settings.moveOnOpen) {
-        this.registerEvent(
-          this.app.workspace.on("file-open", (file: obsidian.TFile) => {
-            this.matchAndMoveFile(file);
-          }),
-        );
-      }
+
+    // negative ifs for easier reading and debugging
+    if (!this.areMovingTriggersEnabled()) return;
+    if (!this.areThereRulesToApply()) return;
+    if (!this.areRulesValid()) return;
+
+    if (this.settings.moveOnOpen) {
+      this.registerEvent(
+        this.app.workspace.on("file-open", (file: obsidian.TFile) => {
+          if (file == null || file.path == null) return;
+          if (this.isFileExcluded(file)) return;
+          this.matchAndMoveFile(file);
+        }),
+      );
     }
   }
 
@@ -48,13 +51,29 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
   }
 
   /**
+   * Checks if the file is excluded by the exclusion rule
+   *
+   * @param file - The file to be checked
+   * @returns true if the file path is excluded, false otherwise
+   */
+  isFileExcluded(file: obsidian.TFile): boolean {
+    if (!this.areThereExcludedFolders()) return false;
+    if (!this.areThereRulesToApply()) return false;
+
+    return exclusionMatcherUtil.isFilePathExcluded(
+      file,
+      this.settings.excludedFolders,
+    );
+  }
+
+  /**
    * Matches the file to the rule and moves it to the destination folder
    *
    * @param file - File to be matched and moved
    * @returns void
    */
   matchAndMoveFile(file: obsidian.TFile): void {
-    if (file == null || file.path == null) return;
+    console.log("Moving file: ", file.path);
     const rule = ruleMatcherUtil.getMatchingRule(
       file,
       this.settings.movingRules,
@@ -88,7 +107,7 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    * No point in doing anything if there is no trigger set which will cause you to move the files
    * @returns boolean
    */
-  checkIfMovingTriggersAreEnabled(): boolean {
+  areMovingTriggersEnabled(): boolean {
     return (
       this.settings.moveOnClose ||
       this.settings.moveOnCreate ||
@@ -101,17 +120,38 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    * If there are no rules to apply, then there is no point in checking for them
    * @returns boolean
    */
-  checkIfThereAreRulesToApply(): boolean {
-    return this.settings.movingRules.length > 0;
+  areThereRulesToApply(): boolean {
+    return (
+      this.settings.movingRules.length > 0 &&
+      this.settings.movingRules.every(
+        (rule) => rule.regex !== "" && rule.folder !== "",
+      )
+    );
+  }
+
+  /**
+   * If there are no excluded folders, then we can move thing freely
+   * @returns boolean
+   */
+  areThereExcludedFolders(): boolean {
+    return this.settings.excludedFolders.length > 0;
   }
 
   /**
    * Superficail check if the rules are valid
    * @returns boolean
    */
-  checkIfRulesAreValid(): boolean {
+  areRulesValid(): boolean {
     return this.settings.movingRules.every(
       (rule) => rule.regex !== "" && rule.folder !== "",
     );
+  }
+
+  /**
+   * Superficail check if the excluded folders are valid
+   * @returns boolean
+   */
+  areExcludedFoldersValid(): boolean {
+    return this.settings.excludedFolders.every((rule) => rule.regex !== "");
   }
 }
