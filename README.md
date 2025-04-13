@@ -77,3 +77,11 @@ In case you for some reason want to contact me directly, you can do so by sendin
 
 If you want to contribute to this plugin, you can do so by forking this repository and creating a pull request with your changes and an elaboration what they are and why.
 Thank you!
+
+
+## Future plans
+
+- [ ] Add excluded folder support
+- [ ] Add excluded file support
+- [ ] Add a file like .gitignore which contains all the moving rules (i am assuming the list can grow quite big for some people)
+
