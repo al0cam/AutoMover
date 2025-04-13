@@ -8,58 +8,58 @@ If your plugin does not need CSS, delete this file.
 */
 
 .moving_rules_container {
-  padding: 0.75em 0;
-  border-top: 1px solid var(--background-modifier-border);
-  display: flex;
-  flex-direction: column;
+	padding: 0.75em 0;
+	border-top: 1px solid var(--background-modifier-border);
+	display: flex;
+	flex-direction: column;
 }
 
 .rule {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 0.5em;
-  justify-content: space-evenly;
-  gap: 0.5em;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-bottom: 0.5em;
+	justify-content: space-evenly;
+	gap: 0.5em;
 }
 
 .rule_header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
 }
 
 .rule_title {
-  padding: 0.5em;
-  width: 100%;
-  font-weight: bold;
+	padding: 0.5em;
+	width: 100%;
+	font-weight: bold;
 }
 
 .rule_input {
-  width: 100%;
-  padding: 0.5em;
-  border: 1px solid var(--background-modifier-border);
-  border-radius: 0.25em;
+	width: 100%;
+	padding: 0.5em;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 0.25em;
 }
 
 .rule_button {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .rule_button:hover {
-  background-color: var(--color-green);
+	background-color: var(--color-green);
 }
 
 .rule_button:active {
-  background-color: var(--background-modifier-active);
+	background-color: var(--background-modifier-active);
 }
 
 .rule_button_remove:hover {
-  background-color: var(--color-red) !important;
+	background-color: var(--color-red) !important;
 }
 
 .rule_button_duplicate:hover {
-  background-color: var(--color-blue) !important;
+	background-color: var(--color-blue) !important;
 }
