@@ -11,7 +11,7 @@ Therefore, this plugin supports regex and regex groups to create the destination
 Using the plugin doens't require any special setup. Just install it and you're good to go.
 Also, you can use it without knowing what regex is, but it's recommended to learn it to get the most out of this plugin.
 
-### Introduction to the UI
+## Introduction to the UI
 
 This image shows the UI of the plugin with numbers attached to each part of the UI.
 The numbers are elaborate below the image.
@@ -30,10 +30,24 @@ The numbers are elaborate below the image.
 9. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
 
 
-### Example without regex
+### Exclusion rules UI
+From patch 1.0.2 onwards, you can exclude files and folders from being moved.
+The UI that is used for the exclusion rules is the same as the one used for the search criteria.
+But here is a quick glance at how it looks:
+
+
+1. **Excluded folder or files**: This is where you can input the folder or file paths you want to exclude from being moved.
+2. **Add rule button**: This button will add a rule to the list of rules.
+3. **Delete rule button**: This button will delete the selected rule from the list of rules.
+4. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
+
+## Usage of moving rules
 
 #### Important note 1: The text is case sensitive.
 #### Important note 2: Use the "/" character to separate folders.
+#### Writing Regex: The best tool for writing regex is Regex101 (https://regex101.com/)
+
+### Examples without regex
 
 Lets imagine you have three files called Scroll 1, Scroll 2 and Scroll 3.
 Such as you can see below:
@@ -66,7 +80,43 @@ The end result will look like this:
 ![RegexGroupingResult](https://github.com/user-attachments/assets/96da1cf2-0799-4984-ae5b-302d5ff35a8f)
 
 
-#### Writing Regex: The best tool for writing regex is Regex101 (https://regex101.com/)
+## Usage of exclusion rules
+
+The exclusion rules are used to exclude files and folders from being moved.
+They go above the moving rules and are used to filter out files and folders that you don't want to be moved.
+
+They syntax is the same as the one used for the moving rules but here you can find some exaples of how to use them anyway:
+
+### Example without regex
+
+Lets imagine you have some creatures you want to move into folders like this:
+
+After moving them you are left with this:
+
+
+And now you are thinking "Damn, despite all that rage, those are still rats in a cage..."
+And because you saw how angry the rats were, you decided you don't want to include them in further sorting.
+Therefore, a rule would look like this:
+
+
+And the result would look like this:
+
+
+### Example with regex
+
+I don't have any funny examples for this one, but I thought it could be useful to have the opportunity to exclude files and folders using regex as well.
+
+Let's imagine you are moving the following files:
+
+And you decided you want to exclude those that have numbers as a suffix.
+Then your rules can look like this:
+
+And the result would look like this:
+
+
+A sidenote for this is that regex can by default be used to manage exclusions as well.
+So the current example of exclusion could have been handled with a slight change to the moving rule as well.
+The rule would looks like this "System [^\d\W]*" and the result would be the same.
 
 ## Requesting features and reporting issues
 
