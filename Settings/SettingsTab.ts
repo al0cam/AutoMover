@@ -182,14 +182,14 @@ export class SettingsTab extends obsidian.PluginSettingTab {
     /**
      * Header for excluded folders
      */
-    const excludedFoldersContainer = containerEl.createDiv({
+    const exclusionRuleContainer = containerEl.createDiv({
       cls: "moving_rules_container",
     });
-    new obsidian.Setting(excludedFoldersContainer)
+    new obsidian.Setting(exclusionRuleContainer)
       .setName("Exclusion rules")
       .setHeading();
 
-    const exclusionList = excludedFoldersContainer.createDiv({
+    const exclusionList = exclusionRuleContainer.createDiv({
       cls: "rule_list",
     });
     const exclusionHeader = exclusionList.createDiv({
@@ -205,21 +205,21 @@ export class SettingsTab extends obsidian.PluginSettingTab {
       cls: "rule_button",
     });
     addExclusionButton.addEventListener("click", () => {
-      this.plugin.settings.excludedFolders.push(new ExclusionRule());
+      this.plugin.settings.exclusionRules.push(new ExclusionRule());
       this.display();
     });
 
     /**
      * List of excluded folders
      */
-    for (const exclusion of this.plugin.settings.excludedFolders) {
+    for (const exclusion of this.plugin.settings.exclusionRules) {
       const child = exclusionList.createDiv({ cls: "rule" });
       child.createEl("input", {
         value: exclusion.regex,
         cls: "rule_input",
       }).onchange = (e) => {
         exclusion.regex = (e.target as HTMLInputElement).value;
-        this.plugin.settings.excludedFolders.map((ef) =>
+        this.plugin.settings.exclusionRules.map((ef) =>
           ef === exclusion ? exclusion : ef,
         );
         this.plugin.saveData(this.plugin.settings);
@@ -230,7 +230,7 @@ export class SettingsTab extends obsidian.PluginSettingTab {
         cls: "rule_button rule_button_duplicate",
       });
       duplicateExclusionButton.addEventListener("click", () => {
-        this.plugin.settings.excludedFolders.push(
+        this.plugin.settings.exclusionRules.push(
           new ExclusionRule(exclusion.regex),
         );
         this.display();
@@ -241,8 +241,8 @@ export class SettingsTab extends obsidian.PluginSettingTab {
         cls: "rule_button rule_button_remove",
       });
       deleteExclusionButton.addEventListener("click", () => {
-        this.plugin.settings.excludedFolders =
-          this.plugin.settings.excludedFolders.filter((r) => r !== exclusion);
+        this.plugin.settings.exclusionRules =
+          this.plugin.settings.exclusionRules.filter((r) => r !== exclusion);
         this.display();
       });
     }

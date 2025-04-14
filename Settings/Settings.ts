@@ -4,20 +4,16 @@ import type { MovingRule } from "Models/MovingRule";
 
 export interface AutoMoverSettings {
   moveOnOpen: boolean;
-  moveOnSave: boolean;
-  moveOnClose: boolean;
-  moveOnCreate: boolean;
+  // moveOnSave: boolean;
   movingRules: MovingRule[];
-  excludedFolders: ExclusionRule[];
+  exclusionRules: ExclusionRule[];
 }
 
 export const DEFAULT_SETTINGS: Partial<AutoMoverSettings> = {
   moveOnOpen: true,
-  moveOnSave: true,
-  moveOnClose: false,
-  moveOnCreate: false,
+  // moveOnSave: true,
   movingRules: [],
-  excludedFolders: [],
+  exclusionRules: [],
 };
 
 function loadSettings(

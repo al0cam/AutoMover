@@ -45,6 +45,10 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
   goThroughAllFiles() {
     const files = this.app.vault.getFiles();
     for (const file of files) {
+      if (file == null || file.path == null) continue;
+      console.log("Going through file: ", file.path);
+      console.log("File excluded: ", this.isFileExcluded(file));
+      if (this.isFileExcluded(file)) continue;
       this.matchAndMoveFile(file);
     }
     new obsidian.Notice("All files moved!", 5000);
@@ -62,7 +66,7 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
 
     return exclusionMatcherUtil.isFilePathExcluded(
       file,
-      this.settings.excludedFolders,
+      this.settings.exclusionRules,
     );
   }
 
@@ -108,12 +112,8 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    * @returns boolean
    */
   areMovingTriggersEnabled(): boolean {
-    return (
-      this.settings.moveOnClose ||
-      this.settings.moveOnCreate ||
-      this.settings.moveOnOpen ||
-      this.settings.moveOnSave
-    );
+    return this.settings.moveOnOpen;
+    // || this.settings.moveOnSave
   }
 
   /**
@@ -134,7 +134,7 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    * @returns boolean
    */
   areThereExcludedFolders(): boolean {
-    return this.settings.excludedFolders.length > 0;
+    return this.settings.exclusionRules.length > 0;
   }
 
   /**
@@ -152,6 +152,6 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    * @returns boolean
    */
   areExcludedFoldersValid(): boolean {
-    return this.settings.excludedFolders.every((rule) => rule.regex !== "");
+    return this.settings.exclusionRules.every((rule) => rule.regex !== "");
   }
 }
