@@ -151,4 +151,9 @@ Thank you!
 - [x] Add excluded file support
 - [x] Add regex support for excluded folders and files (must support language accents like ñ, á, š, đ, こ, 猫, etc.)
 - [ ] Add a file like .gitignore which contains all the moving rules (i am assuming the list can grow quite big for some people)
+- [ ] Add import and export of rules
+- [ ] Add time based execution of rule sorting
+- [ ] Exposing the move files button to the left toolbar
+- [ ] Auto tagging of moved files with the destination folder name (last folder in the path)
+
 
