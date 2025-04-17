@@ -22,12 +22,13 @@ The numbers are elaborate below the image.
 1. **Plugin location**: This is where you can access the plugin's settings.
 2. **On-open toggle button**: This button toggles whether the plugin will run when you open a file.
 3. **Manual run button**: This button will run the mover manually for all the files in the obsidian vault.
-4. **Quick Tutorial**: This is a quick tutorial and reminder on how to use the plugin.
-5. **Search criteria**: This is where you can input strings or regex that will be used to match the files you want to move.
-6. **Destination path**: This is where you can input the destination path for the files that match the search criteria.
-7. **Add rule button**: This button will add a rule to the list of rules.
-8. **Delete rule button**: This button will delete the selected rule from the list of rules.
-9. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
+4. **Automatic moving toggle and input**: This toggle and input will allow you to set a time interval in which the plugin will run automatically. If the time is not set it won't run automatically.
+5. **Quick Tutorial**: This is a quick tutorial and reminder on how to use the plugin.
+6. **Search criteria**: This is where you can input strings or regex that will be used to match the files you want to move.
+7. **Destination path**: This is where you can input the destination path for the files that match the search criteria.
+8. **Add rule button**: This button will add a rule to the list of rules.
+9. **Delete rule button**: This button will delete the selected rule from the list of rules.
+10. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
 
 
 ### Exclusion rules UI
@@ -41,6 +42,17 @@ But here is a quick glance at how it looks:
 2. **Add rule button**: This button will add a rule to the list of rules.
 3. **Delete rule button**: This button will delete the selected rule from the list of rules.
 4. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
+
+### Command palette
+From patch 1.0.4 onwards, you can access the plugin from the command palette.
+With the available commands being:
+- **AutoMover: Move files**: This command will run the mover manually for all the files in the obsidian vault.
+
+### Sidebar (Ribbon)
+From patch 1.0.4 onwards, you can access the plugin from the sidebar (ribbon).
+In case you need something faster than the command palette, now you have the the option to use the button in the sidebar.
+This is what it looks like:
+
 
 ## Usage of moving rules
 
