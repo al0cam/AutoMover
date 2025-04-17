@@ -16,8 +16,7 @@ Also, you can use it without knowing what regex is, but it's recommended to lear
 This image shows the UI of the plugin with numbers attached to each part of the UI.
 The numbers are elaborate below the image.
 
-![Explanation](https://github.com/user-attachments/assets/2c7ec7e0-f8e1-4f7f-ad12-c74e733be751)
-
+![newUIWithAutomaticTimer](https://github.com/user-attachments/assets/317a4b55-ac57-438b-9902-f840445364eb)
 
 1. **Plugin location**: This is where you can access the plugin's settings.
 2. **On-open toggle button**: This button toggles whether the plugin will run when you open a file.
@@ -53,6 +52,7 @@ From patch 1.0.4 onwards, you can access the plugin from the sidebar (ribbon).
 In case you need something faster than the command palette, now you have the the option to use the button in the sidebar.
 This is what it looks like:
 
+![sidebarRibbon](https://github.com/user-attachments/assets/a632cecf-9113-45c2-947e-ab5ac85c47d9)
 
 ## Usage of moving rules
 
