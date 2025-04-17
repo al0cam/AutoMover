@@ -2,6 +2,7 @@ import type AutoMoverPlugin from "main";
 import { ExclusionRule } from "Models/ExclusionRule";
 import { MovingRule } from "Models/MovingRule";
 import * as obsidian from "obsidian";
+import timerUtil from "Utils/TimerUtil";
 
 export class SettingsTab extends obsidian.PluginSettingTab {
   plugin: AutoMoverPlugin;
@@ -37,6 +38,44 @@ export class SettingsTab extends obsidian.PluginSettingTab {
           this.plugin.goThroughAllFiles();
         });
       });
+
+    const automaticMovingContainer = containerEl.createDiv({});
+
+    new obsidian.Setting(automaticMovingContainer)
+      .setName("Automatic moving")
+      .setDesc(
+        `Execute a timed event that goes through all the files and moves them according to the rules specified below.
+		 The formatting is hh:mm:ss.
+	     If the timer is set to 0, the automatic moving will do nothing.`,
+      )
+      .setClass("timer-setting")
+      .addToggle((cb) =>
+        cb
+          .setValue(this.plugin.settings.automaticMoving)
+          .onChange(async (value) => {
+            this.plugin.settings.automaticMoving = value;
+            await this.plugin.saveData(this.plugin.settings);
+            this.app.workspace.trigger(
+              "AutoMover:automatic-moving-update",
+              this.plugin.settings,
+            );
+            this.display();
+          }),
+      )
+      .addText((cb) =>
+        cb
+          .setDisabled(!this.plugin.settings.automaticMoving)
+          .setValue(timerUtil.formatTime(this.plugin.settings.timer))
+          .setPlaceholder("hh:mm:ss")
+          .onChange(async (value) => {
+            this.plugin.settings.timer = timerUtil.parseTimeToMs(value);
+            await this.plugin.saveData(this.plugin.settings);
+            this.app.workspace.trigger(
+              "AutoMover:automatic-moving-update",
+              this.plugin.settings,
+            );
+          }),
+      );
 
     // there is no default event to move on save, therefore, i'd need to define a new one
     // running move on change could be an option, but it would produce an overhead in performance because of constant checking for changes

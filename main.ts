@@ -4,6 +4,8 @@ import movingUtil from "Utils/MovingUtil";
 import ruleMatcherUtil from "Utils/RuleMatcherUtil";
 import * as obsidian from "obsidian";
 import exclusionMatcherUtil from "Utils/ExclusionMatcherUtil";
+import timerUtil from "Utils/TimerUtil";
+import { addIcon } from "obsidian";
 
 export default class AutoMoverPlugin extends obsidian.Plugin {
   settings: Settings.AutoMoverSettings;
@@ -26,15 +28,47 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
     if (!this.areThereRulesToApply()) return;
     if (!this.areRulesValid()) return;
 
-    if (this.settings.moveOnOpen) {
-      this.registerEvent(
-        this.app.workspace.on("file-open", (file: obsidian.TFile) => {
-          if (file == null || file.path == null) return;
-          if (this.isFileExcluded(file)) return;
-          this.matchAndMoveFile(file);
-        }),
-      );
-    }
+    this.registerEvent(
+      this.app.workspace.on("file-open", (file: obsidian.TFile) => {
+        if (!this.settings.moveOnOpen) return;
+        if (file == null || file.path == null) return;
+        if (this.isFileExcluded(file)) return;
+        this.matchAndMoveFile(file);
+      }),
+    );
+
+    this.registerEvent(
+      // since i am defining my own event, ts-lint is crying about it but it works in the end
+      this.app.workspace.on("AutoMover:automatic-moving-update", () => {
+        // console.log("Automatic moving update");
+        this.automaticMoving();
+      }),
+    );
+
+    this.addCommand({
+      id: "AutoMover:move-files",
+      name: "Move files",
+      callback: () => {
+        this.goThroughAllFiles();
+      },
+    });
+
+    this.addRibbonIcon("file-input", "AutoMover: Move files", () => {
+      this.goThroughAllFiles();
+    });
+  }
+
+  /**
+   * Reocurring function that will be called by the timer
+   *
+   * @returns void
+   */
+  automaticMoving() {
+    // console.log("Automatic moving run");
+    if (!this.settings.automaticMoving) return;
+    if (this.settings.timer == null || this.settings.timer <= 0) return;
+    this.goThroughAllFiles();
+    timerUtil.startTimer(this.automaticMoving.bind(this), this.settings.timer);
   }
 
   /**
@@ -43,11 +77,10 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    * @returns void
    */
   goThroughAllFiles() {
+    // console.log("Going through all files");
     const files = this.app.vault.getFiles();
     for (const file of files) {
       if (file == null || file.path == null) continue;
-      console.log("Going through file: ", file.path);
-      console.log("File excluded: ", this.isFileExcluded(file));
       if (this.isFileExcluded(file)) continue;
       this.matchAndMoveFile(file);
     }
@@ -77,7 +110,7 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    * @returns void
    */
   matchAndMoveFile(file: obsidian.TFile): void {
-    console.log("Moving file: ", file.path);
+    // console.log("Moving file: ", file.path);
     const rule = ruleMatcherUtil.getMatchingRule(
       file,
       this.settings.movingRules,

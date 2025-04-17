@@ -20,12 +20,8 @@ class ExclusionMatcherUtil {
    * @returns true if the file path is excluded, false otherwise
    */
   isFilePathExcluded(file: TFile, exclusionRules: ExclusionRule[]): boolean {
-	console.log("Exclusion rules: ", exclusionRules);
     for (const rule of exclusionRules) {
       const regex = new RegExp(rule.regex);
-      console.log("Regex: ", regex);
-      console.log("File path: ", file.path);
-      console.log("Result: ", regex.test(file.path));
       if (regex.test(file.path)) {
         return true;
       }

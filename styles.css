@@ -63,3 +63,16 @@ If your plugin does not need CSS, delete this file.
 .rule_button_duplicate:hover {
 	background-color: var(--color-blue) !important;
 }
+
+/* Style for timer-setting input field */
+.setting-item.timer-setting input[type="text"] {
+	width: auto;
+	min-width: 8ch;
+	/* Minimum for hh:mm:ss */
+	max-width: 16ch;
+	/* Allows up to ~9999:59:59 */
+	/* padding: 2px 6px; */
+	font-family: monospace;
+	text-align: center;
+	/* box-sizing: content-box; */
+}
