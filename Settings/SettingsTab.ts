@@ -45,7 +45,7 @@ export class SettingsTab extends obsidian.PluginSettingTab {
       .setName("Automatic moving")
       .setDesc(
         `Execute a timed event that goes through all the files and moves them according to the rules specified below.
-		 The formatting is hh:mm:ss.
+		 The formatting is hh:mm:ss (if set 00:05:00 it will execute every 5 minutes).
 	     If the timer is set to 0, the automatic moving will do nothing.`,
       )
       .setClass("timer-setting")
