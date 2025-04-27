@@ -42,6 +42,13 @@ But here is a quick glance at how it looks:
 3. **Delete rule button**: This button will delete the selected rule from the list of rules.
 4. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
 
+### Timer and timed moving
+The time displayed is an interval, 20:00:00 will execucte every 20 hours.
+Other examples could include: 
+00:05:00 -> triggers every five minutes
+00:00:05 -> triggers every five seconds
+72:30:00 -> triggers every 3 days and 30 minutes (if your Device is online and obsidian runnning for that long)
+
 ### Command palette
 From patch 1.0.4 onwards, you can access the plugin from the command palette.
 With the available commands being:
