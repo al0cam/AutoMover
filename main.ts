@@ -1,11 +1,11 @@
+import settingsIO from "IO/SettingsIO";
 import * as Settings from "Settings/Settings";
 import { SettingsTab } from "Settings/SettingsTab";
+import exclusionMatcherUtil from "Utils/ExclusionMatcherUtil";
 import movingUtil from "Utils/MovingUtil";
 import ruleMatcherUtil from "Utils/RuleMatcherUtil";
-import * as obsidian from "obsidian";
-import exclusionMatcherUtil from "Utils/ExclusionMatcherUtil";
 import timerUtil from "Utils/TimerUtil";
-import { addIcon } from "obsidian";
+import * as obsidian from "obsidian";
 
 export default class AutoMoverPlugin extends obsidian.Plugin {
   settings: Settings.AutoMoverSettings;
@@ -13,6 +13,7 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
   async onload() {
     // console.log("loading plugin");
     movingUtil.init(this.app);
+    settingsIO.init(this.app);
     /**
      * Loading settings and creating the settings tab
      */

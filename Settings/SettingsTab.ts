@@ -1,8 +1,9 @@
-import type AutoMoverPlugin from "main";
+import settingsIO from "IO/SettingsIO";
 import { ExclusionRule } from "Models/ExclusionRule";
 import { MovingRule } from "Models/MovingRule";
-import * as obsidian from "obsidian";
 import timerUtil from "Utils/TimerUtil";
+import type AutoMoverPlugin from "main";
+import * as obsidian from "obsidian";
 
 export class SettingsTab extends obsidian.PluginSettingTab {
   plugin: AutoMoverPlugin;
@@ -17,6 +18,34 @@ export class SettingsTab extends obsidian.PluginSettingTab {
     containerEl.empty();
 
     new obsidian.Setting(containerEl).setName("Automatic moving").setHeading();
+    new obsidian.Setting(containerEl)
+      .setName("Export/Import of settings")
+      .setDesc(
+        `Import will replace the current settings.
+         If you aren't prompted to choose a location, then the file will be exported to/imported from the vault root as AutoMover_settings.json.`,
+      )
+      .addButton((button) => {
+        button.setButtonText("Export settings");
+        button.onClick(async () => {
+          settingsIO.exportSettings(this.plugin.settings);
+        });
+      })
+      .addButton((button) => {
+        button.setButtonText("Import settings");
+        button.onClick(async () => {
+          const importedSettings = await settingsIO.importSettings();
+          if (importedSettings) {
+            this.plugin.settings = importedSettings;
+            await this.plugin.saveData(this.plugin.settings);
+            this.plugin.app.workspace.trigger(
+              "AutoMover:automatic-moving-update",
+              this.plugin.settings,
+            );
+            this.display();
+          }
+        });
+      });
+
     new obsidian.Setting(containerEl)
       .setName("Move on open")
       .setDesc("Should the file be moved when it is opened?")
