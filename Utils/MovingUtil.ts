@@ -1,8 +1,9 @@
-import * as obsidian from "obsidian";
+import { Notice, TFile, TFolder } from "obsidian";
+import type { App } from "obsidian";
 
 class MovingUtil {
   private static instance: MovingUtil;
-  private app: obsidian.App;
+  private app: App;
 
   private constructor() {}
 
@@ -13,7 +14,7 @@ class MovingUtil {
     return MovingUtil.instance;
   }
 
-  public init(app: obsidian.App): void {
+  public init(app: App): void {
     this.app = app;
   }
 
@@ -25,7 +26,7 @@ class MovingUtil {
    */
   public isFile(path: string): boolean {
     const file = this.app.vault.getAbstractFileByPath(path);
-    return file instanceof obsidian.TFile;
+    return file instanceof TFile;
   }
 
   /**
@@ -35,9 +36,7 @@ class MovingUtil {
    * @returns boolean
    */
   public isFolder(path: string): boolean {
-    return (
-      this.app.vault.getAbstractFileByPath(path) instanceof obsidian.TFolder
-    );
+    return this.app.vault.getAbstractFileByPath(path) instanceof TFolder;
   }
 
   /**
@@ -47,11 +46,11 @@ class MovingUtil {
    * @param newPath - Destination path
    * @returns void
    */
-  public moveFile(file: obsidian.TFile, newPath: string): void {
+  public moveFile(file: TFile, newPath: string): void {
     if (this.isFolder(newPath)) {
       this.app.vault.rename(file, `${newPath}/${file.name}`);
     } else {
-      new obsidian.Notice(
+      new Notice(
         `Invalid destination path\n${newPath} is not a folder!\nCreating requested folder.`,
         5000,
       );
@@ -71,14 +70,11 @@ class MovingUtil {
    * @param newPath - Destination path
    * @returns void
    */
-  public moveFolder(folder: obsidian.TFolder, newPath: string): void {
+  public moveFolder(folder: TFolder, newPath: string): void {
     if (this.isFolder(newPath)) {
       this.app.vault.rename(folder, `${newPath}/${folder.name}`);
     } else {
-      new obsidian.Notice(
-        `Invalid destination path\n${newPath} is not a folder!`,
-        5000,
-      );
+      new Notice(`Invalid destination path\n${newPath} is not a folder!`, 5000);
       console.error(`Invalid destination path\n${newPath} is not a folder!`);
     }
   }
@@ -89,13 +85,13 @@ class MovingUtil {
    * @param path - Path of the folder to be created
    * @returns Created folder or null if folder already exists
    */
-  public createFolder(path: string): obsidian.TFolder | null {
+  public createFolder(path: string): TFolder | null {
     if (!this.isFolder(path)) {
       this.app.vault.createFolder(path).then((folder) => {
         return folder;
       });
     } else {
-      new obsidian.Notice("Folder already exists", 5000);
+      new Notice("Folder already exists", 5000);
       console.error("Folder already exists");
     }
     return null;
