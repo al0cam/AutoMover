@@ -19,15 +19,35 @@ The numbers are elaborate below the image.
 ![newUIWithAutomaticTimer](https://github.com/user-attachments/assets/317a4b55-ac57-438b-9902-f840445364eb)
 
 1. **Plugin location**: This is where you can access the plugin's settings.
-2. **On-open toggle button**: This button toggles whether the plugin will run when you open a file.
-3. **Manual run button**: This button will run the mover manually for all the files in the obsidian vault.
-4. **Automatic moving toggle and input**: This toggle and input will allow you to set a time interval in which the plugin will run automatically. If the time is not set it won't run automatically.
-5. **Quick Tutorial**: This is a quick tutorial and reminder on how to use the plugin.
-6. **Search criteria**: This is where you can input strings or regex that will be used to match the files you want to move.
-7. **Destination path**: This is where you can input the destination path for the files that match the search criteria.
-8. **Add rule button**: This button will add a rule to the list of rules.
-9. **Delete rule button**: This button will delete the selected rule from the list of rules.
-10. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
+2. **Export/Import**: This is where you can export and import the settings you have set up.
+3. **On-open toggle button**: This button toggles whether the plugin will run when you open a file.
+4. **Manual run button**: This button will run the mover manually for all the files in the obsidian vault.
+5. **Automatic moving toggle and input**: This toggle and input will allow you to set a time interval in which the plugin will run automatically. If the time is not set it won't run automatically.
+6. **Quick Tutorial**: This is a quick tutorial and reminder on how to use the plugin.
+7. **Search criteria**: This is where you can input strings or regex that will be used to match the files you want to move.
+8. **Destination path**: This is where you can input the destination path for the files that match the search criteria.
+9. **Add rule button**: This button will add a rule to the list of rules.
+10. **Delete rule button**: This button will delete the selected rule from the list of rules.
+11. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
+
+
+### Export and Import
+The export and import buttons are used to export and import the settings you have set up.
+In case your device can't open a file manager for you to choose the destination and name for the file,
+then it will save the settings in the root folder of your vault with the name "AutoMoverSettings.json".
+
+The same goes for the import button, if your device can't open a file manager for you to choose the file to import,
+then it will look for the file "AutoMoverSettings.json" in the root folder of your vault.
+
+Importing new settings will overwrite the current settings you have set up and there is no undo button.
+Therefore, the best thing to do is to export the settings before importing new ones, in case you care about them.
+
+### Timer and timed moving
+The time displayed is an interval, 20:00:00 will execucte every 20 hours.
+Other examples could include:
+1. 00:05:00 -> triggers every five minutes
+2. 00:00:05 -> triggers every five seconds
+3. 72:30:00 -> triggers every 3 days and 30 minutes (if your Device is online and obsidian runnning for that long)
 
 
 ### Exclusion rules UI
@@ -42,12 +62,6 @@ But here is a quick glance at how it looks:
 3. **Delete rule button**: This button will delete the selected rule from the list of rules.
 4. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
 
-### Timer and timed moving
-The time displayed is an interval, 20:00:00 will execucte every 20 hours.
-Other examples could include: 
-1. 00:05:00 -> triggers every five minutes
-2. 00:00:05 -> triggers every five seconds
-3. 72:30:00 -> triggers every 3 days and 30 minutes (if your Device is online and obsidian runnning for that long)
 
 ### Command palette
 From patch 1.0.4 onwards, you can access the plugin from the command palette.
@@ -172,8 +186,8 @@ Thank you!
 - [x] Add time based execution of rule sorting
 - [x] Exposing the move files button to the left toolbar
 - [x] Exposing the move files to the commands accessible via command palette
+- [x] Add import and export of rules
 - [ ] Add a file like .gitignore which contains all the moving rules (i am assuming the list can grow quite big for some people)
-- [ ] Add import and export of rules
 - [ ] Auto tagging of moved files with the destination folder name (last folder in the path)
 
 
