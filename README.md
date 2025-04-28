@@ -16,7 +16,7 @@ Also, you can use it without knowing what regex is, but it's recommended to lear
 This image shows the UI of the plugin with numbers attached to each part of the UI.
 The numbers are elaborate below the image.
 
-![newUIWithAutomaticTimer](https://github.com/user-attachments/assets/317a4b55-ac57-438b-9902-f840445364eb)
+![settingsUpdatedWithExportImport](https://github.com/user-attachments/assets/70819309-abf1-4537-8106-7705995a03ae)
 
 1. **Plugin location**: This is where you can access the plugin's settings.
 2. **Export/Import**: This is where you can export and import the settings you have set up.
