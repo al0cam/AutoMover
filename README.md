@@ -32,9 +32,15 @@ The numbers are elaborate below the image.
 
 
 ### Export and Import
+By default, if you are using some way of syncing your obsidian vaults, this doesn't provide anyting new for you.
+However, if you wish to transition your notes accross devices which aren't synced or accross vaults, this makes your life easier.
+
 The export and import buttons are used to export and import the settings you have set up.
 In case your device can't open a file manager for you to choose the destination and name for the file,
 then it will save the settings in the root folder of your vault with the name "AutoMoverSettings.json".
+
+**Obsidian doesn't show json files by default, so you will have to use a file manager to see the file.**
+I didn't want the file to be popping out of your notes, I don't consider it more important than your notes.
 
 The same goes for the import button, if your device can't open a file manager for you to choose the file to import,
 then it will look for the file "AutoMoverSettings.json" in the root folder of your vault.

@@ -22,7 +22,7 @@ export class SettingsTab extends obsidian.PluginSettingTab {
       .setName("Export/Import of settings")
       .setDesc(
         `Import will replace the current settings.
-         If you aren't prompted to choose a location, then the file will be exported to/imported from the vault root as AutoMover_settings.json.`,
+         If you aren't prompted to choose a location, then the file will be exported to/imported from the vault root as AutoMover_settings.json (json files aren't visible in the vault by default).`,
       )
       .addButton((button) => {
         button.setButtonText("Export settings");
