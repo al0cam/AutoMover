@@ -195,5 +195,6 @@ Thank you!
 - [x] Add import and export of rules
 - [ ] Add a file like .gitignore which contains all the moving rules (i am assuming the list can grow quite big for some people)
 - [ ] Auto tagging of moved files with the destination folder name (last folder in the path)
+- [ ] Add undo button to the notification popup for the moved files
 
 
