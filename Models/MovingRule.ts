@@ -1,6 +1,20 @@
+/**
+ * Regex based rule for moving files
+ */
 export class MovingRule {
   /**
-   * This filed is used for defining the regex with its group matchers
+   * This field is used for defining the regex with its group matchers
+   *
+   * This can contain the follwoing:
+   *	- Names of files w/w/o extensions
+   *	- Names of folders
+   *	- Extensions of files
+   *	- Regex strings w/w/o groups
+   *	- Any combination of the above
+   *
+   * Tag update:
+   *    - The regex can now hold tags as well, which can be used to match files based on their tags.
+   *
    */
   public regex: string;
   /**

@@ -7,6 +7,7 @@ export interface AutoMoverSettings {
   // moveOnSave: boolean;
   movingRules: MovingRule[];
   exclusionRules: ExclusionRule[];
+  tagRules: MovingRule[];
   automaticMoving: boolean;
   timer: number | null; // in miliseconds
 }
@@ -16,6 +17,7 @@ export const DEFAULT_SETTINGS: Partial<AutoMoverSettings> = {
   // moveOnSave: true,
   movingRules: [],
   exclusionRules: [],
+  tagRules: [],
   automaticMoving: false,
   timer: null,
 };

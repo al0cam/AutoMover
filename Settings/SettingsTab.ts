@@ -1,24 +1,26 @@
 import settingsIO from "IO/SettingsIO";
-import { ExclusionRule } from "Models/ExclusionRule";
-import { MovingRule } from "Models/MovingRule";
 import timerUtil from "Utils/TimerUtil";
 import type AutoMoverPlugin from "main";
-import * as obsidian from "obsidian";
+import { type App, PluginSettingTab, Setting } from "obsidian";
+import { exclusionSection } from "./ExclusionSection";
+import movingRuleSection from "./MovingRuleSection";
+import { tagSection } from "./TagSection";
 
-export class SettingsTab extends obsidian.PluginSettingTab {
+export class SettingsTab extends PluginSettingTab {
   plugin: AutoMoverPlugin;
 
-  constructor(app: obsidian.App, plugin: AutoMoverPlugin) {
+  constructor(app: App, plugin: AutoMoverPlugin) {
     super(app, plugin);
     this.plugin = plugin;
   }
 
+  // how to call rerendering from child section?
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
 
-    new obsidian.Setting(containerEl).setName("Automatic moving").setHeading();
-    new obsidian.Setting(containerEl)
+    new Setting(containerEl).setName("Automatic moving").setHeading();
+    new Setting(containerEl)
       .setName("Export/Import of settings")
       .setDesc(
         `Import will replace the current settings.
@@ -46,7 +48,7 @@ export class SettingsTab extends obsidian.PluginSettingTab {
         });
       });
 
-    new obsidian.Setting(containerEl)
+    new Setting(containerEl)
       .setName("Move on open")
       .setDesc("Should the file be moved when it is opened?")
       .addToggle((cb) =>
@@ -56,7 +58,7 @@ export class SettingsTab extends obsidian.PluginSettingTab {
         }),
       );
 
-    new obsidian.Setting(containerEl)
+    new Setting(containerEl)
       .setName("Manually move")
       .setDesc(
         "Execute the command to go through your notes and move them according to the rules specified below.",
@@ -70,7 +72,7 @@ export class SettingsTab extends obsidian.PluginSettingTab {
 
     const automaticMovingContainer = containerEl.createDiv({});
 
-    new obsidian.Setting(automaticMovingContainer)
+    new Setting(automaticMovingContainer)
       .setName("Automatic moving")
       .setDesc(
         `Execute a timed event that goes through all the files and moves them according to the rules specified below.
@@ -127,7 +129,7 @@ export class SettingsTab extends obsidian.PluginSettingTab {
     const tutorialContainer = containerEl.createDiv({
       cls: "moving_rules_container",
     });
-    new obsidian.Setting(tutorialContainer).setName("Tutorial").setHeading();
+    new Setting(tutorialContainer).setName("Tutorial").setHeading();
     /**
      * Rule description and tutorial
      */
@@ -168,152 +170,8 @@ export class SettingsTab extends obsidian.PluginSettingTab {
     example2.createSpan({ text: "Scrolls/$1", cls: "rule_title" });
     // TUTORIAL END
 
-    // MOVING RULES START
-    /**
-     * Header of the rules
-     */
-    const movingRulesContainer = containerEl.createDiv({
-      cls: "moving_rules_container",
-    });
-
-    new obsidian.Setting(movingRulesContainer)
-      .setName("Moving rules")
-      .setHeading();
-
-    const ruleList = movingRulesContainer.createDiv({ cls: "rule_list" });
-    const ruleHeader = ruleList.createDiv({ cls: "rule margig_right" });
-    ruleHeader.createEl("p", {
-      text: "Search criteria (string or regex)",
-      cls: "rule_title",
-    });
-    ruleHeader.createEl("p", {
-      text: "Folder (string that can contain regex groups)",
-      cls: "rule_title",
-    });
-
-    const addRuleButton = ruleHeader.createEl("button", {
-      text: "+",
-      cls: "rule_button",
-    });
-    addRuleButton.addEventListener("click", () => {
-      this.plugin.settings.movingRules.push(new MovingRule());
-      // this is used to rerender the settings tab
-      this.display();
-    });
-
-    /**
-     * List of rules
-     */
-    for (const rule of this.plugin.settings.movingRules) {
-      const child = ruleList.createDiv({ cls: "rule" });
-      child.createEl("input", {
-        value: rule.regex,
-        cls: "rule_input",
-      }).onchange = (e) => {
-        rule.regex = (e.target as HTMLInputElement).value;
-        this.plugin.settings.movingRules.map((r) => (r === rule ? rule : r));
-        this.plugin.saveData(this.plugin.settings);
-      };
-      child.createEl("input", {
-        value: rule.folder,
-        cls: "rule_input",
-      }).onchange = (e) => {
-        rule.folder = (e.target as HTMLInputElement).value;
-        this.plugin.settings.movingRules.map((r) => (r === rule ? rule : r));
-        this.plugin.saveData(this.plugin.settings);
-      };
-
-      const duplicateRuleButton = child.createEl("button", {
-        text: "⿻",
-        cls: "rule_button rule_button_duplicate",
-      });
-      duplicateRuleButton.addEventListener("click", () => {
-        this.plugin.settings.movingRules.push(
-          new MovingRule(rule.regex, rule.folder),
-        );
-        this.display();
-      });
-
-      const deleteRuleButton = child.createEl("button", {
-        text: "x",
-        cls: "rule_button rule_button_remove",
-      });
-      deleteRuleButton.addEventListener("click", () => {
-        this.plugin.settings.movingRules =
-          this.plugin.settings.movingRules.filter((r) => r !== rule);
-        this.display();
-      });
-    }
-    // MOVING RULES END
-
-    // EXCLUSION FOLDERS START
-    /**
-     * Header for excluded folders
-     */
-    const exclusionRuleContainer = containerEl.createDiv({
-      cls: "moving_rules_container",
-    });
-    new obsidian.Setting(exclusionRuleContainer)
-      .setName("Exclusion rules")
-      .setHeading();
-
-    const exclusionList = exclusionRuleContainer.createDiv({
-      cls: "rule_list",
-    });
-    const exclusionHeader = exclusionList.createDiv({
-      cls: "rule margig_right",
-    });
-    exclusionHeader.createEl("p", {
-      text: "Excluded folders or files (string or regex)",
-      cls: "rule_title",
-    });
-
-    const addExclusionButton = exclusionHeader.createEl("button", {
-      text: "+",
-      cls: "rule_button",
-    });
-    addExclusionButton.addEventListener("click", () => {
-      this.plugin.settings.exclusionRules.push(new ExclusionRule());
-      this.display();
-    });
-
-    /**
-     * List of excluded folders
-     */
-    for (const exclusion of this.plugin.settings.exclusionRules) {
-      const child = exclusionList.createDiv({ cls: "rule" });
-      child.createEl("input", {
-        value: exclusion.regex,
-        cls: "rule_input",
-      }).onchange = (e) => {
-        exclusion.regex = (e.target as HTMLInputElement).value;
-        this.plugin.settings.exclusionRules.map((ef) =>
-          ef === exclusion ? exclusion : ef,
-        );
-        this.plugin.saveData(this.plugin.settings);
-      };
-
-      const duplicateExclusionButton = child.createEl("button", {
-        text: "⿻",
-        cls: "rule_button rule_button_duplicate",
-      });
-      duplicateExclusionButton.addEventListener("click", () => {
-        this.plugin.settings.exclusionRules.push(
-          new ExclusionRule(exclusion.regex),
-        );
-        this.display();
-      });
-
-      const deleteExclusionButton = child.createEl("button", {
-        text: "x",
-        cls: "rule_button rule_button_remove",
-      });
-      deleteExclusionButton.addEventListener("click", () => {
-        this.plugin.settings.exclusionRules =
-          this.plugin.settings.exclusionRules.filter((r) => r !== exclusion);
-        this.display();
-      });
-    }
-    // EXCLUSION FOLDERS END
+    movingRuleSection(containerEl, this.plugin);
+    exclusionSection(containerEl, this.plugin);
+    tagSection(containerEl, this.plugin);
   }
 }
