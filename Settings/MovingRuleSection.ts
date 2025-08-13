@@ -1,10 +1,11 @@
+import AutoMoverPlugin from "main";
 import { MovingRule } from "Models/MovingRule";
-import type AutoMoverPlugin from "main";
 import { Setting } from "obsidian";
 
 export default function movingRuleSection(
   containerEl: HTMLElement,
   plugin: AutoMoverPlugin,
+  display: () => void,
 ) {
   /**
    * Header of the rules
@@ -32,8 +33,7 @@ export default function movingRuleSection(
   });
   addRuleButton.addEventListener("click", () => {
     plugin.settings.movingRules.push(new MovingRule());
-    // this is used to rerender the settings tab
-    this.display();
+    display();
   });
 
   /**
@@ -64,7 +64,7 @@ export default function movingRuleSection(
     });
     duplicateRuleButton.addEventListener("click", () => {
       plugin.settings.movingRules.push(new MovingRule(rule.regex, rule.folder));
-      this.display();
+      display();
     });
 
     const deleteRuleButton = child.createEl("button", {
@@ -75,7 +75,7 @@ export default function movingRuleSection(
       plugin.settings.movingRules = plugin.settings.movingRules.filter(
         (r) => r !== rule,
       );
-      this.display();
+      display();
     });
   }
 }

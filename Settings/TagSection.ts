@@ -2,7 +2,11 @@ import { MovingRule } from "Models/MovingRule";
 import * as obsidian from "obsidian";
 import type AutoMoverPlugin from "main";
 
-export function tagSection(containerEl: HTMLElement, plugin: AutoMoverPlugin) {
+export function tagSection(
+  containerEl: HTMLElement,
+  plugin: AutoMoverPlugin,
+  display: () => void,
+) {
   /**
    * Header for excluded folders
    */
@@ -28,7 +32,7 @@ export function tagSection(containerEl: HTMLElement, plugin: AutoMoverPlugin) {
   });
   addTagButton.addEventListener("click", () => {
     plugin.settings.tagRules.push(new MovingRule());
-    this.display();
+    display();
   });
 
   /**
@@ -59,7 +63,7 @@ export function tagSection(containerEl: HTMLElement, plugin: AutoMoverPlugin) {
     });
     duplicateRuleButton.addEventListener("click", () => {
       plugin.settings.tagRules.push(new MovingRule(rule.regex, rule.folder));
-      this.display();
+      display();
     });
 
     const deleteRuleButton = child.createEl("button", {
@@ -70,7 +74,7 @@ export function tagSection(containerEl: HTMLElement, plugin: AutoMoverPlugin) {
       plugin.settings.tagRules = plugin.settings.tagRules.filter(
         (r) => r !== rule,
       );
-      this.display();
+      display();
     });
   }
 }

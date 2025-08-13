@@ -15,7 +15,7 @@ export class SettingsTab extends PluginSettingTab {
   }
 
   // how to call rerendering from child section?
-  display(): void {
+  display = () => {
     const { containerEl } = this;
     containerEl.empty();
 
@@ -108,19 +108,6 @@ export class SettingsTab extends PluginSettingTab {
           }),
       );
 
-    // there is no default event to move on save, therefore, i'd need to define a new one
-    // running move on change could be an option, but it would produce an overhead in performance because of constant checking for changes
-    //
-    // new obsidian.Setting(containerEl)
-    //   .setName("Move on save")
-    //   .setDesc("Should the file be moved when it is saved?")
-    //   .addToggle((cb) =>
-    //     cb.setValue(this.plugin.settings.moveOnSave).onChange(async (value) => {
-    //       this.plugin.settings.moveOnSave = value;
-    //       await this.plugin.saveData(this.plugin.settings);
-    //     }),
-    //   );
-
     // TUTORIAL START
     /**
      * Instead of using the default .setting-item class I created a custom class to add other styling,
@@ -170,8 +157,8 @@ export class SettingsTab extends PluginSettingTab {
     example2.createSpan({ text: "Scrolls/$1", cls: "rule_title" });
     // TUTORIAL END
 
-    movingRuleSection(containerEl, this.plugin);
-    exclusionSection(containerEl, this.plugin);
-    tagSection(containerEl, this.plugin);
-  }
+    movingRuleSection(containerEl, this.plugin, this.display);
+    exclusionSection(containerEl, this.plugin, this.display);
+    tagSection(containerEl, this.plugin, this.display);
+  };
 }

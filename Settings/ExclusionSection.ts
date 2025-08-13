@@ -5,6 +5,7 @@ import { Setting } from "obsidian";
 export function exclusionSection(
   containerEl: HTMLElement,
   plugin: AutoMoverPlugin,
+  display: () => void,
 ) {
   /**
    * Header for excluded folders
@@ -31,7 +32,7 @@ export function exclusionSection(
   });
   addExclusionButton.addEventListener("click", () => {
     plugin.settings.exclusionRules.push(new ExclusionRule());
-    this.display();
+    display();
   });
 
   /**
@@ -56,7 +57,7 @@ export function exclusionSection(
     });
     duplicateExclusionButton.addEventListener("click", () => {
       plugin.settings.exclusionRules.push(new ExclusionRule(exclusion.regex));
-      this.display();
+      display();
     });
 
     const deleteExclusionButton = child.createEl("button", {
@@ -67,7 +68,7 @@ export function exclusionSection(
       plugin.settings.exclusionRules = plugin.settings.exclusionRules.filter(
         (r) => r !== exclusion,
       );
-      this.display();
+      display();
     });
   }
 }
