@@ -1,5 +1,5 @@
 import type { MovingRule } from "Models/MovingRule";
-import type { TFile } from "obsidian";
+import type { TagCache, TFile } from "obsidian";
 
 class RuleMatcherUtil {
   private static instance: RuleMatcherUtil;
@@ -21,7 +21,7 @@ class RuleMatcherUtil {
    * @param rules
    * @returns MovingRule | null
    */
-  public getMatchingRule(file: TFile, rules: MovingRule[]): MovingRule | null {
+  public getMatchingRuleByName(file: TFile, rules: MovingRule[]): MovingRule | null {
     for (const rule of rules) {
       if (rule.regex == null || rule.regex === "") {
         console.error("Rule does not have a regex: ", rule);
@@ -43,6 +43,37 @@ class RuleMatcherUtil {
   }
 
   /**
+   * Returns the first rule that matches any of the tags
+   * If no rule matches, returns null
+   * @param tags
+   * @param rules
+   * @returns MovingRule | null
+   */
+  public getMatchingRuleByTag(tags: TagCache[], rules: MovingRule[]): MovingRule | null {
+    for (const rule of rules) {
+      if (rule.regex == null || rule.regex === "") {
+        console.error("Tag Rule does not have a regex: ", rule);
+        continue;
+      }
+      if (rule.folder == null || rule.folder === "") {
+        console.error("Tag Rule does not have a destination folder: ", rule);
+        continue;
+      }
+      if (!this.isValidRegex(rule.regex)) {
+        console.error("Tag Rule has an invalid regex: ", rule);
+        continue;
+      }
+
+      for (const tag of tags) {
+        if (tag.tag.match(rule.regex)) {
+          return rule;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
    * Returns the regex groups of the file that match the rule
    * If no groups match, returns an empty array
    *
@@ -50,10 +81,7 @@ class RuleMatcherUtil {
    * @param rule
    * @returns string[]
    */
-  public getGroupMatches(
-    file: TFile,
-    rule: MovingRule,
-  ): RegExpMatchArray | null {
+  public getGroupMatches(file: TFile, rule: MovingRule): RegExpMatchArray | null {
     const matches = file.name.match(rule.regex);
     return matches;
   }
@@ -84,10 +112,7 @@ class RuleMatcherUtil {
    * @param rule
    * @param matches
    */
-  public constructFinalDesinationPath(
-    rule: MovingRule,
-    matches: RegExpMatchArray,
-  ): string {
+  public constructFinalDesinationPath(rule: MovingRule, matches: RegExpMatchArray): string {
     let folderPath = rule.folder;
     const unnamedGroups = this.getUnnamedGroups(rule.regex);
     // it has been asserted before that there is no way this can be null before the call, the rule and file are checked to be valid
@@ -105,10 +130,7 @@ class RuleMatcherUtil {
    * @returns boolean
    */
   public isRegexGrouped(rule: MovingRule): boolean {
-    return (
-      this.doesDestinationUseGroups(rule) &&
-      this.getUnnamedGroups(rule.regex) != null
-    );
+    return this.doesDestinationUseGroups(rule) && this.getUnnamedGroups(rule.regex) != null;
   }
 
   /**
