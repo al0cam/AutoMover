@@ -17,17 +17,12 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
     /**
      * Loading settings and creating the settings tab
      */
-    this.settings = Object.assign(
-      {},
-      Settings.DEFAULT_SETTINGS,
-      await this.loadData(),
-    );
+    this.settings = Object.assign({}, Settings.DEFAULT_SETTINGS, await this.loadData());
     this.addSettingTab(new SettingsTab(this.app, this));
 
     // negative ifs for easier reading and debugging
     if (!this.areMovingTriggersEnabled()) return;
     if (!this.areThereRulesToApply()) return;
-    if (!this.areRulesValid()) return;
 
     this.registerEvent(
       this.app.workspace.on("file-open", (file: obsidian.TFile) => {
@@ -98,10 +93,7 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
     if (!this.areThereExcludedFolders()) return false;
     if (!this.areThereRulesToApply()) return false;
 
-    return exclusionMatcherUtil.isFilePathExcluded(
-      file,
-      this.settings.exclusionRules,
-    );
+    return exclusionMatcherUtil.isFilePathExcluded(file, this.settings.exclusionRules);
   }
 
   /**
@@ -112,29 +104,56 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    */
   matchAndMoveFile(file: obsidian.TFile): void {
     // console.log("Moving file: ", file.path);
-    const rule = ruleMatcherUtil.getMatchingRule(
-      file,
-      this.settings.movingRules,
-    );
-    if (rule == null || rule.folder == null) return;
+    if (this.matchAndMoveByName(file)) return;
+    else this.matchAndMoveByTag(file);
+  }
+
+  /**
+   * Matches the file by name and moves it to the destination folder
+   *
+   * @param file - File to be matched and moved
+   * @returns true if the file was moved, false otherwise
+   */
+  matchAndMoveByName(file: obsidian.TFile): boolean {
+    const rule = ruleMatcherUtil.getMatchingRuleByName(file, this.settings.movingRules);
+    if (rule == null || rule.folder == null) return false;
+
     if (ruleMatcherUtil.isRegexGrouped(rule)) {
       const matches = ruleMatcherUtil.getGroupMatches(file, rule);
-      const finalDestinationPath = ruleMatcherUtil.constructFinalDesinationPath(
-        rule,
-        matches!,
-      );
+      const finalDestinationPath = ruleMatcherUtil.constructFinalDesinationPath(rule, matches!);
       movingUtil.moveFile(file, finalDestinationPath);
     } else {
       movingUtil.moveFile(file, rule.folder);
     }
+    return true;
+  }
+
+  /**
+   * Matches the file by tags it contains and moves it to the destination folder
+   *
+   * @param file - File to be matched and moved
+   * @returns true if the file was moved, false otherwise
+   */
+  matchAndMoveByTag(file: obsidian.TFile): boolean {
+    const tags = this.app.metadataCache.getFileCache(file)?.tags;
+    if (tags == null || tags.length === 0) return false;
+
+    const tagRule = ruleMatcherUtil.getMatchingRuleByTag(tags, this.settings.tagRules);
+
+    if (tagRule == null || tagRule.folder == null) return false;
+
+    if (ruleMatcherUtil.isRegexGrouped(tagRule)) {
+      const matches = ruleMatcherUtil.getGroupMatches(file, tagRule);
+      const finalDestinationPath = ruleMatcherUtil.constructFinalDesinationPath(tagRule, matches!);
+      movingUtil.moveFile(file, finalDestinationPath);
+    } else {
+      movingUtil.moveFile(file, tagRule.folder);
+    }
+    return true;
   }
 
   async asyncloadSettings() {
-    this.settings = Object.assign(
-      {},
-      Settings.DEFAULT_SETTINGS,
-      await this.loadData(),
-    );
+    this.settings = Object.assign({}, Settings.DEFAULT_SETTINGS, await this.loadData());
   }
 
   async onunload() {
@@ -156,10 +175,10 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    */
   areThereRulesToApply(): boolean {
     return (
-      this.settings.movingRules.length > 0 &&
-      this.settings.movingRules.every(
-        (rule) => rule.regex !== "" && rule.folder !== "",
-      )
+      (this.settings.movingRules.length > 0 &&
+        this.settings.movingRules.every((rule) => rule.regex !== "" && rule.folder !== "")) ||
+      (this.settings.tagRules.length > 0 &&
+        this.settings.tagRules.every((rule) => rule.regex !== "" && rule.folder !== ""))
     );
   }
 
@@ -176,8 +195,9 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    * @returns boolean
    */
   areRulesValid(): boolean {
-    return this.settings.movingRules.every(
-      (rule) => rule.regex !== "" && rule.folder !== "",
+    return (
+      this.settings.movingRules.every((rule) => rule.regex !== "" && rule.folder !== "") &&
+      this.settings.tagRules.every((rule) => rule.regex !== "" && rule.folder !== "")
     );
   }
 
