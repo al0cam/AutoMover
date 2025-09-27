@@ -14,7 +14,6 @@ export class SettingsTab extends PluginSettingTab {
     this.plugin = plugin;
   }
 
-  // how to call rerendering from child section?
   display = () => {
     const { containerEl } = this;
     containerEl.empty();
@@ -39,10 +38,7 @@ export class SettingsTab extends PluginSettingTab {
           if (importedSettings) {
             this.plugin.settings = importedSettings;
             await this.plugin.saveData(this.plugin.settings);
-            this.plugin.app.workspace.trigger(
-              "AutoMover:automatic-moving-update",
-              this.plugin.settings,
-            );
+            this.plugin.app.workspace.trigger("AutoMover:automatic-moving-update", this.plugin.settings);
             this.display();
           }
         });
@@ -60,9 +56,7 @@ export class SettingsTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Manually move")
-      .setDesc(
-        "Execute the command to go through your notes and move them according to the rules specified below.",
-      )
+      .setDesc("Execute the command to go through your notes and move them according to the rules specified below.")
       .addButton((button) => {
         button.setButtonText("Move files");
         button.onClick(async () => {
@@ -81,17 +75,12 @@ export class SettingsTab extends PluginSettingTab {
       )
       .setClass("timer-setting")
       .addToggle((cb) =>
-        cb
-          .setValue(this.plugin.settings.automaticMoving)
-          .onChange(async (value) => {
-            this.plugin.settings.automaticMoving = value;
-            await this.plugin.saveData(this.plugin.settings);
-            this.app.workspace.trigger(
-              "AutoMover:automatic-moving-update",
-              this.plugin.settings,
-            );
-            this.display();
-          }),
+        cb.setValue(this.plugin.settings.automaticMoving).onChange(async (value) => {
+          this.plugin.settings.automaticMoving = value;
+          await this.plugin.saveData(this.plugin.settings);
+          this.app.workspace.trigger("AutoMover:automatic-moving-update", this.plugin.settings);
+          this.display();
+        }),
       )
       .addText((cb) =>
         cb
@@ -101,10 +90,7 @@ export class SettingsTab extends PluginSettingTab {
           .onChange(async (value) => {
             this.plugin.settings.timer = timerUtil.parseTimeToMs(value);
             await this.plugin.saveData(this.plugin.settings);
-            this.app.workspace.trigger(
-              "AutoMover:automatic-moving-update",
-              this.plugin.settings,
-            );
+            this.app.workspace.trigger("AutoMover:automatic-moving-update", this.plugin.settings);
           }),
       );
 
@@ -158,7 +144,7 @@ export class SettingsTab extends PluginSettingTab {
     // TUTORIAL END
 
     movingRuleSection(containerEl, this.plugin, this.display);
-    exclusionSection(containerEl, this.plugin, this.display);
     tagSection(containerEl, this.plugin, this.display);
+    exclusionSection(containerEl, this.plugin, this.display);
   };
 }

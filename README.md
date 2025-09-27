@@ -56,6 +56,13 @@ Other examples could include:
 3. 72:30:00 -> triggers every 3 days and 30 minutes (if your Device is online and obsidian runnning for that long)
 
 
+### Tag rules UI
+From patch 1.0.6 onwards, you can move files using tags.
+It takes into account the first rule that is a match,
+**if it first matches with a FileName rule, it won't check the Tag rules.**
+There are no pictures for this one, as it is identical to the previous ruleset.
+
+
 ### Exclusion rules UI
 From patch 1.0.2 onwards, you can exclude files and folders from being moved.
 The UI that is used for the exclusion rules is the same as the one used for the search criteria.
@@ -193,6 +200,7 @@ Thank you!
 - [x] Exposing the move files button to the left toolbar
 - [x] Exposing the move files to the commands accessible via command palette
 - [x] Add import and export of rules
+- [x] Add #tag rule support
 - [ ] Add a file like .gitignore which contains all the moving rules (i am assuming the list can grow quite big for some people)
 - [ ] Auto tagging of moved files with the destination folder name (last folder in the path)
 - [ ] Add undo button to the notification popup for the moved files

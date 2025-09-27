@@ -1,7 +1,7 @@
 {
-  "name": "obsidian-sample-plugin",
-  "version": "1.0.0",
-  "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+  "name": "AutoMover",
+  "version": "1.0.6",
+  "description": "AutoMover: Moves files with specified names/tags where you want.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
