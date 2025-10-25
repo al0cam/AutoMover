@@ -2,20 +2,25 @@ import { ExclusionRule } from "Models/ExclusionRule";
 import type AutoMoverPlugin from "main";
 import { Setting } from "obsidian";
 
-export function exclusionSection(
-  containerEl: HTMLElement,
-  plugin: AutoMoverPlugin,
-  display: () => void,
-) {
+export function exclusionSection(containerEl: HTMLElement, plugin: AutoMoverPlugin, display: () => void) {
   /**
    * Header for excluded folders
    */
   const exclusionRuleContainer = containerEl.createDiv({
     cls: "moving_rules_container",
   });
-  new Setting(exclusionRuleContainer).setName("Exclusion rules").setHeading();
 
-  const exclusionList = exclusionRuleContainer.createDiv({
+  // Class used from obdsidian's css for consistency
+  const exclusionRuleDetails = exclusionRuleContainer.createEl("details", {});
+  exclusionRuleDetails.createEl("summary", { text: "Exclusion rules", cls: ["setting-item-heading"] });
+
+  exclusionRuleDetails.open = !plugin.settings.collapseSections.exclusionRules;
+  exclusionRuleDetails.addEventListener("toggle", async () => {
+    plugin.settings.collapseSections.exclusionRules = !exclusionRuleDetails.open;
+    await plugin.saveData(plugin.settings);
+  });
+
+  const exclusionList = exclusionRuleDetails.createDiv({
     cls: "rule_list",
   });
   const exclusionHeader = exclusionList.createDiv({
@@ -45,9 +50,7 @@ export function exclusionSection(
       cls: "rule_input",
     }).onchange = (e) => {
       exclusion.regex = (e.target as HTMLInputElement).value;
-      plugin.settings.exclusionRules.map((ef) =>
-        ef === exclusion ? exclusion : ef,
-      );
+      plugin.settings.exclusionRules.map((ef) => (ef === exclusion ? exclusion : ef));
       plugin.saveData(plugin.settings);
     };
 
@@ -65,9 +68,7 @@ export function exclusionSection(
       cls: "rule_button rule_button_remove",
     });
     deleteExclusionButton.addEventListener("click", () => {
-      plugin.settings.exclusionRules = plugin.settings.exclusionRules.filter(
-        (r) => r !== exclusion,
-      );
+      plugin.settings.exclusionRules = plugin.settings.exclusionRules.filter((r) => r !== exclusion);
       display();
     });
   }

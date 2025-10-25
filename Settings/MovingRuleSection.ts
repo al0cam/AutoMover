@@ -2,11 +2,7 @@ import AutoMoverPlugin from "main";
 import { MovingRule } from "Models/MovingRule";
 import { Setting } from "obsidian";
 
-export default function movingRuleSection(
-  containerEl: HTMLElement,
-  plugin: AutoMoverPlugin,
-  display: () => void,
-) {
+export default function movingRuleSection(containerEl: HTMLElement, plugin: AutoMoverPlugin, display: () => void) {
   /**
    * Header of the rules
    */
@@ -14,9 +10,17 @@ export default function movingRuleSection(
     cls: "moving_rules_container",
   });
 
-  new Setting(movingRulesContainer).setName("Moving rules").setHeading();
+  // Class used from obdsidian's css for consistency
+  const movingRuleDetails = movingRulesContainer.createEl("details", {});
+  movingRuleDetails.createEl("summary", { text: "Moving rules", cls: ["setting-item-heading"] });
 
-  const ruleList = movingRulesContainer.createDiv({ cls: "rule_list" });
+  movingRuleDetails.open = !plugin.settings.collapseSections.movingRules;
+  movingRuleDetails.addEventListener("toggle", async () => {
+    plugin.settings.collapseSections.movingRules = !movingRuleDetails.open;
+    await plugin.saveData(plugin.settings);
+  });
+
+  const ruleList = movingRuleDetails.createDiv({ cls: "rule_list" });
   const ruleHeader = ruleList.createDiv({ cls: "rule margig_right" });
   ruleHeader.createEl("p", {
     text: "Search criteria (string or regex)",
@@ -72,9 +76,7 @@ export default function movingRuleSection(
       cls: "rule_button rule_button_remove",
     });
     deleteRuleButton.addEventListener("click", () => {
-      plugin.settings.movingRules = plugin.settings.movingRules.filter(
-        (r) => r !== rule,
-      );
+      plugin.settings.movingRules = plugin.settings.movingRules.filter((r) => r !== rule);
       display();
     });
   }

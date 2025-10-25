@@ -10,6 +10,12 @@ export interface AutoMoverSettings {
   tagRules: MovingRule[];
   automaticMoving: boolean;
   timer: number | null; // in miliseconds
+  collapseSections: {
+    tutorial: boolean;
+    movingRules: boolean;
+    exclusionRules: boolean;
+    tagRules: boolean;
+  };
 }
 
 export const DEFAULT_SETTINGS: Partial<AutoMoverSettings> = {
@@ -20,10 +26,14 @@ export const DEFAULT_SETTINGS: Partial<AutoMoverSettings> = {
   tagRules: [],
   automaticMoving: false,
   timer: null,
+  collapseSections: {
+    tutorial: false,
+    movingRules: false,
+    exclusionRules: false,
+    tagRules: false,
+  },
 };
 
-function loadSettings(
-  AutoMoverPlugin: AutoMoverPlugin,
-): Partial<AutoMoverSettings> {
+function loadSettings(AutoMoverPlugin: AutoMoverPlugin): Partial<AutoMoverSettings> {
   return Object.assign({}, DEFAULT_SETTINGS, AutoMoverPlugin.loadData());
 }
