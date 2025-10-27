@@ -206,3 +206,9 @@ Thank you!
 - [ ] Add undo button to the notification popup for the moved files
 
 
+- [x] Add collapse/expand all rules button
+- [x] Add Project moving rules
+	- [x] Project name and destination path
+	- [x] Subfield that contain the moving rules for the project
+- [ ] Add project rules UI
+- [ ] Project rules business logic
