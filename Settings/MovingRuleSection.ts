@@ -27,7 +27,7 @@ export default function movingRuleSection(containerEl: HTMLElement, plugin: Auto
     cls: "rule_title",
   });
   ruleHeader.createEl("p", {
-    text: "Folder (string that can contain regex groups)",
+    text: "Folder (can contain regex groups)",
     cls: "rule_title",
   });
 
