@@ -50,7 +50,6 @@ export function projectSection(containerEl: HTMLElement, plugin: AutoMoverPlugin
    */
   for (const project of plugin.settings.projectRules as ProjectRule[]) {
     const child = projectList.createDiv({ cls: "project" });
-    const projectDetails = child.createDiv({ cls: "rule" });
 
     // Class used from obdsidian's css for consistency
     const movingRulesDetails = child.createEl("details", {});
@@ -149,7 +148,5 @@ export function projectSection(containerEl: HTMLElement, plugin: AutoMoverPlugin
         display();
       });
     }
-
-    projectDetails.createEl("br");
   }
 }
