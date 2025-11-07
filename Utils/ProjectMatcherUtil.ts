@@ -1,6 +1,4 @@
 import { ProjectRule } from "Models/ProjectRule";
-import type { TFile } from "obsidian";
-import propertyUtil from "./PropertyUtil";
 
 class ProjectMatcherUtil {
   private static instance: ProjectMatcherUtil;
@@ -17,29 +15,34 @@ class ProjectMatcherUtil {
   /**
    * Returns the first project rule that matches the file
    * If no rule matches, returns null
-   * @param file
+   * @param projectName
    * @param projectRules
    * @returns ProjectRule | null
    */
-  public getMatchingProjectRule(file: TFile, projectRules: ProjectRule[]): ProjectRule | null {
-	propertyUtil.getPropertiesFromFile(file);
-    for (const rule of projectRules) {
-      if (rule.projectName == null || rule.projectName === "") {
-        console.error("Project Rule does not have a project name: ", rule);
-        continue;
-      }
-      if (rule.folder == null || rule.folder === "") {
-        console.error("Project Rule does not have a destination folder: ", rule);
-        continue;
-      }
-      // Check if the file path contains the project name as a wiki link or plain text
-      const wikiLink = `[[${rule.projectName}]]`;
-      if (file.path.includes(wikiLink) || file.path.includes(rule.projectName)) {
-        return rule;
+  public getMatchingProjectRule(projectName: string, projectRules: ProjectRule[]): ProjectRule | null {
+    for (const projectRule of projectRules) {
+      if (projectRule.projectName === projectName) {
+        return projectRule;
       }
     }
     return null;
   }
+
+  /**
+   * Prepends the project folder to the destination path
+   * and checks whether the project folder ends with a slash
+   *
+   * @param projectRule
+   * @param subPath
+   * @returns string
+   */
+  public constructProjectDestinationPath(projectRule: ProjectRule, subPath: string): string {
+    let projectFolder = projectRule.folder;
+    if (!projectFolder.endsWith("/")) {
+      projectFolder += "/";
+    }
+    return projectFolder + subPath;
+  }
 }
-const exclusionMatcherUtil = ProjectMatcherUtil.getInstance();
-export default exclusionMatcherUtil;
+const projectMatcherUtil = ProjectMatcherUtil.getInstance();
+export default projectMatcherUtil;

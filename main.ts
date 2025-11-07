@@ -6,6 +6,7 @@ import movingUtil from "Utils/MovingUtil";
 import ruleMatcherUtil from "Utils/RuleMatcherUtil";
 import timerUtil from "Utils/TimerUtil";
 import * as obsidian from "obsidian";
+import projectMatcherUtil from "Utils/ProjectMatcherUtil";
 
 export default class AutoMoverPlugin extends obsidian.Plugin {
   settings: Settings.AutoMoverSettings;
@@ -103,8 +104,9 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    * @returns void
    */
   matchAndMoveFile(file: obsidian.TFile): void {
-    // console.log("Moving file: ", file.path);
-    if (this.matchAndMoveByName(file)) return;
+    console.log("Moving file: ", file.path);
+    if (this.matchAndMoveByProject(file)) return;
+    else if (this.matchAndMoveByName(file)) return;
     else this.matchAndMoveByTag(file);
   }
 
@@ -148,6 +150,44 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
       movingUtil.moveFile(file, finalDestinationPath);
     } else {
       movingUtil.moveFile(file, tagRule.folder);
+    }
+    return true;
+  }
+
+  matchAndMoveByProject(file: obsidian.TFile): boolean {
+    const cache = this.app.metadataCache.getFileCache(file);
+    if (cache == null) return false;
+    if (cache.frontmatter == null) return false;
+    if (cache.frontmatter.Project == null && cache.frontmatter.project == null) return false;
+    console.log("Frontmatter found: ", cache.frontmatter);
+
+    const projectName: string = cache.frontmatter.Project || cache.frontmatter.project;
+    console.log("Project name found: ", projectName);
+
+    const projectRule = projectMatcherUtil.getMatchingProjectRule(projectName, this.settings.projectRules);
+    if (projectRule == null || projectRule.folder == null) return false;
+    if (projectRule.rules == null || projectRule.rules.length === 0) return false;
+
+    console.log("Project rule found: ", projectRule);
+
+    const rule = ruleMatcherUtil.getMatchingRuleByName(file, projectRule.rules);
+    if (rule == null || rule.folder == null) return false;
+
+    console.log("Project rule's moving rule found: ", rule);
+
+    if (ruleMatcherUtil.isRegexGrouped(rule)) {
+      const matches = ruleMatcherUtil.getGroupMatches(file, rule);
+      const ruleDesinationPath = ruleMatcherUtil.constructFinalDesinationPath(rule, matches!);
+      const finalDestinationPath = projectMatcherUtil.constructProjectDestinationPath(projectRule, ruleDesinationPath);
+
+      console.log("Final destination path: ", finalDestinationPath);
+
+      movingUtil.moveFile(file, finalDestinationPath);
+    } else {
+      const finalDestinationPath = projectMatcherUtil.constructProjectDestinationPath(projectRule, rule.folder);
+
+      console.log("Final destination path: ", finalDestinationPath);
+      movingUtil.moveFile(file, finalDestinationPath);
     }
     return true;
   }

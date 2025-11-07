@@ -55,6 +55,10 @@ Other examples could include:
 2. 00:00:05 -> triggers every five seconds
 3. 72:30:00 -> triggers every 3 days and 30 minutes (if your Device is online and obsidian runnning for that long)
 
+### Project Rules UI
+From patch 1.0.7 onwards, you can use project rules to group moving rules together.
+And to move files based on the project they belong to.
+Project rules take precedence over the normal moving rules considering they are way more specific.
 
 ### Tag rules UI
 From patch 1.0.6 onwards, you can move files using tags.
@@ -210,5 +214,5 @@ Thank you!
 - [x] Add Project moving rules
 	- [x] Project name and destination path
 	- [x] Subfield that contain the moving rules for the project
-- [ ] Add project rules UI
-- [ ] Project rules business logic
+- [x] Add project rules UI
+- [x] Project rules business logic

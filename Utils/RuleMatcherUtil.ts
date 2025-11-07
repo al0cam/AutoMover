@@ -1,4 +1,5 @@
 import type { MovingRule } from "Models/MovingRule";
+import { ProjectRule } from "Models/ProjectRule";
 import type { TagCache, TFile } from "obsidian";
 
 class RuleMatcherUtil {

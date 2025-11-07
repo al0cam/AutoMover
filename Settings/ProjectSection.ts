@@ -125,7 +125,7 @@ export function projectSection(containerEl: HTMLElement, plugin: AutoMoverPlugin
         value: rule.folder,
         cls: "rule_input",
       }).onchange = (e) => {
-        project.folder = (e.target as HTMLInputElement).value;
+        rule.folder = (e.target as HTMLInputElement).value;
         project.rules.map((r) => (r === rule ? rule : r));
         plugin.saveData(plugin.settings);
       };
