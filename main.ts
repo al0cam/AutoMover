@@ -166,12 +166,25 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
 
     const projectRule = projectMatcherUtil.getMatchingProjectRule(projectName, this.settings.projectRules);
     if (projectRule == null || projectRule.folder == null) return false;
-    if (projectRule.rules == null || projectRule.rules.length === 0) return false;
 
     console.log("Project rule found: ", projectRule);
 
+    // If no rules defined, move to project root
+    if (projectRule.rules == null || projectRule.rules.length === 0) {
+      console.log("No rules defined, moving to project root");
+      movingUtil.moveFile(file, projectRule.folder);
+      return true;
+    }
+
     const rule = ruleMatcherUtil.getMatchingRuleByName(file, projectRule.rules);
-    if (rule == null || rule.folder == null) return false;
+
+    // If no rule matches or folder is "./", move to project root
+    if (rule == null || rule.folder === "./") {
+			console.log("Rule: ", rule);
+      console.log("No matching rule or './' destination, moving to project root");
+      movingUtil.moveFile(file, projectRule.folder);
+      return true;
+    }
 
     console.log("Project rule's moving rule found: ", rule);
 

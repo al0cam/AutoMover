@@ -5,6 +5,17 @@ import { ProjectRule } from "Models/ProjectRule";
 
 export function projectSection(containerEl: HTMLElement, plugin: AutoMoverPlugin, display: () => void) {
   /**
+   * Debounced save function to avoid excessive disk writes
+   */
+  let saveTimeout: NodeJS.Timeout | null = null;
+  const debouncedSave = () => {
+    if (saveTimeout) clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      plugin.saveData(plugin.settings);
+    }, 500);
+  };
+
+  /**
    * Header for project folders
    */
   const projectRuleContainer = containerEl.createDiv({
@@ -68,16 +79,14 @@ export function projectSection(containerEl: HTMLElement, plugin: AutoMoverPlugin
       cls: "rule_input",
     }).onchange = (e) => {
       project.projectName = (e.target as HTMLInputElement).value;
-      plugin.settings.projectRules.map((p) => (p === project ? project : p));
-      plugin.saveData(plugin.settings);
+      debouncedSave();
     };
     movingRulesSummary.createEl("input", {
       value: project.folder,
       cls: "rule_input",
     }).onchange = (e) => {
       project.folder = (e.target as HTMLInputElement).value;
-      plugin.settings.projectRules.map((p) => (p === project ? project : p));
-      plugin.saveData(plugin.settings);
+      debouncedSave();
     };
 
     const addRuleButton = movingRulesSummary.createEl("button", {
@@ -118,16 +127,14 @@ export function projectSection(containerEl: HTMLElement, plugin: AutoMoverPlugin
         cls: "rule_input",
       }).onchange = (e) => {
         rule.regex = (e.target as HTMLInputElement).value;
-        project.rules.map((r) => (r === rule ? rule : r));
-        plugin.saveData(plugin.settings);
+        debouncedSave();
       };
       child.createEl("input", {
         value: rule.folder,
         cls: "rule_input",
       }).onchange = (e) => {
         rule.folder = (e.target as HTMLInputElement).value;
-        project.rules.map((r) => (r === rule ? rule : r));
-        plugin.saveData(plugin.settings);
+        debouncedSave();
       };
 
       const duplicateRuleButton = child.createEl("button", {
@@ -144,7 +151,7 @@ export function projectSection(containerEl: HTMLElement, plugin: AutoMoverPlugin
         cls: "rule_button rule_button_remove",
       });
       deleteRuleButton.addEventListener("click", () => {
-        project.rules = plugin.settings.projectRules.find((p) => p === project)!.rules.filter((r) => r !== rule);
+        project.rules = project.rules.filter((r) => r !== rule);
         display();
       });
     }

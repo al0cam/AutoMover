@@ -4,6 +4,17 @@ import { Setting } from "obsidian";
 
 export function exclusionSection(containerEl: HTMLElement, plugin: AutoMoverPlugin, display: () => void) {
   /**
+   * Debounced save function to avoid excessive disk writes
+   */
+  let saveTimeout: NodeJS.Timeout | null = null;
+  const debouncedSave = () => {
+    if (saveTimeout) clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      plugin.saveData(plugin.settings);
+    }, 500);
+  };
+
+  /**
    * Header for excluded folders
    */
   const exclusionRuleContainer = containerEl.createDiv({
@@ -50,8 +61,7 @@ export function exclusionSection(containerEl: HTMLElement, plugin: AutoMoverPlug
       cls: "rule_input",
     }).onchange = (e) => {
       exclusion.regex = (e.target as HTMLInputElement).value;
-      plugin.settings.exclusionRules.map((ef) => (ef === exclusion ? exclusion : ef));
-      plugin.saveData(plugin.settings);
+      debouncedSave();
     };
 
     const duplicateExclusionButton = child.createEl("button", {

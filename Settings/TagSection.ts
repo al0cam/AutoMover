@@ -4,6 +4,17 @@ import type AutoMoverPlugin from "main";
 
 export function tagSection(containerEl: HTMLElement, plugin: AutoMoverPlugin, display: () => void) {
   /**
+   * Debounced save function to avoid excessive disk writes
+   */
+  let saveTimeout: NodeJS.Timeout | null = null;
+  const debouncedSave = () => {
+    if (saveTimeout) clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      plugin.saveData(plugin.settings);
+    }, 500);
+  };
+
+  /**
    * Header for excluded folders
    */
   const tagRuleContainer = containerEl.createDiv({
@@ -50,16 +61,14 @@ export function tagSection(containerEl: HTMLElement, plugin: AutoMoverPlugin, di
       cls: "rule_input",
     }).onchange = (e) => {
       rule.regex = (e.target as HTMLInputElement).value;
-      plugin.settings.tagRules.map((r) => (r === rule ? rule : r));
-      plugin.saveData(plugin.settings);
+      debouncedSave();
     };
     child.createEl("input", {
       value: rule.folder,
       cls: "rule_input",
     }).onchange = (e) => {
       rule.folder = (e.target as HTMLInputElement).value;
-      plugin.settings.tagRules.map((r) => (r === rule ? rule : r));
-      plugin.saveData(plugin.settings);
+      debouncedSave();
     };
 
     const duplicateRuleButton = child.createEl("button", {

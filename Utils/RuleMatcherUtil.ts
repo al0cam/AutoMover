@@ -4,6 +4,7 @@ import type { TagCache, TFile } from "obsidian";
 
 class RuleMatcherUtil {
   private static instance: RuleMatcherUtil;
+  private regexCache: Map<string, RegExp> = new Map();
 
   private constructor() {}
 
@@ -12,6 +13,18 @@ class RuleMatcherUtil {
       RuleMatcherUtil.instance = new RuleMatcherUtil();
     }
     return RuleMatcherUtil.instance;
+  }
+
+  /**
+   * Gets a compiled regex from cache or creates and caches it
+   * @param pattern - The regex pattern string
+   * @returns RegExp
+   */
+  private getCompiledRegex(pattern: string): RegExp {
+    if (!this.regexCache.has(pattern)) {
+      this.regexCache.set(pattern, new RegExp(pattern));
+    }
+    return this.regexCache.get(pattern)!;
   }
 
   /**
@@ -36,7 +49,8 @@ class RuleMatcherUtil {
         console.error("Rule has an invalid regex: ", rule);
         continue;
       }
-      if (file.name.match(rule.regex)) {
+      const regex = this.getCompiledRegex(rule.regex);
+      if (regex.test(file.name)) {
         return rule;
       }
     }
@@ -65,8 +79,9 @@ class RuleMatcherUtil {
         continue;
       }
 
+      const regex = this.getCompiledRegex(rule.regex);
       for (const tag of tags) {
-        if (tag.tag.match(rule.regex)) {
+        if (regex.test(tag.tag)) {
           return rule;
         }
       }
@@ -83,7 +98,8 @@ class RuleMatcherUtil {
    * @returns string[]
    */
   public getGroupMatches(file: TFile, rule: MovingRule): RegExpMatchArray | null {
-    const matches = file.name.match(rule.regex);
+    const regex = this.getCompiledRegex(rule.regex);
+    const matches = file.name.match(regex);
     return matches;
   }
 

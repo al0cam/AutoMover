@@ -4,6 +4,17 @@ import { Setting } from "obsidian";
 
 export default function movingRuleSection(containerEl: HTMLElement, plugin: AutoMoverPlugin, display: () => void) {
   /**
+   * Debounced save function to avoid excessive disk writes
+   */
+  let saveTimeout: NodeJS.Timeout | null = null;
+  const debouncedSave = () => {
+    if (saveTimeout) clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      plugin.saveData(plugin.settings);
+    }, 500);
+  };
+
+  /**
    * Header of the rules
    */
   const movingRulesContainer = containerEl.createDiv({
@@ -50,16 +61,14 @@ export default function movingRuleSection(containerEl: HTMLElement, plugin: Auto
       cls: "rule_input",
     }).onchange = (e) => {
       rule.regex = (e.target as HTMLInputElement).value;
-      plugin.settings.movingRules.map((r) => (r === rule ? rule : r));
-      plugin.saveData(plugin.settings);
+      debouncedSave();
     };
     child.createEl("input", {
       value: rule.folder,
       cls: "rule_input",
     }).onchange = (e) => {
       rule.folder = (e.target as HTMLInputElement).value;
-      plugin.settings.movingRules.map((r) => (r === rule ? rule : r));
-      plugin.saveData(plugin.settings);
+      debouncedSave();
     };
 
     const duplicateRuleButton = child.createEl("button", {
