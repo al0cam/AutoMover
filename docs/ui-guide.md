@@ -48,12 +48,15 @@ Other examples could include:
 
 ## Collapsible UI Sections
 
-From patch 1.0.7 onwards, all rule sections can be collapsed and expanded for better organization.
+From patch 1.0.7 onwards, all rule sections can be collapsed and expanded for better organization (image below).
 Each section (Tutorial, Moving Rules, Exclusion Rules, Tag Rules, and Project Rules) can be individually collapsed by clicking on the section header.
 
 Additionally, individual project rules can be collapsed to hide their sub-rules, making it easier to manage multiple projects without cluttering the interface.
 
 The collapse state is saved automatically, so your preferred view will persist between sessions.
+
+<img width="1548" height="475" alt="image" src="https://github.com/user-attachments/assets/a8ef8f50-196c-4658-ae3d-9dba2daf896a" />
+
 
 ## Project Rules UI
 
@@ -62,6 +65,13 @@ And to move files based on the project they belong to.
 Project rules take precedence over the normal moving rules considering they are way more specific.
 
 Each project rule can be collapsed individually to hide its sub-rules, and the entire Project Rules section can also be collapsed.
+
+<img width="1531" height="611" alt="image" src="https://github.com/user-attachments/assets/c74d13de-6a2f-48f7-bc48-3e25f0f607e9" />
+
+1. **Add Project rule button**: This button will add a project rule to the list of project rules.
+2. **Delete rule button**: This button will delete the selected rule from the list of rules.
+3. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
+
 
 ## Tag Rules UI
 
