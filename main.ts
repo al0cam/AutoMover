@@ -145,7 +145,7 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
     if (tagRule == null || tagRule.folder == null) return false;
 
     if (ruleMatcherUtil.isRegexGrouped(tagRule)) {
-      const matches = ruleMatcherUtil.getGroupMatches(file, tagRule);
+      const matches = ruleMatcherUtil.getGroupMatchesForTags(tags, tagRule);
       console.log("File: ", file.path);
       console.log("Tag rule: ", tagRule);
       console.log("Tag matches: ", matches);

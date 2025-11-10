@@ -109,9 +109,11 @@ class RuleMatcherUtil {
     console.log("Compiled regex: ", regex);
     for (const tag of tags) {
       const matches = tag.tag.match(regex);
+      if (matches) {
+        return matches;
+      }
     }
-
-    return matches;
+    return null;
   }
 
   /**
