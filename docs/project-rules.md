@@ -9,7 +9,7 @@ Reference to file properties: https://help.obsidian.md/properties
 
 1. **Frontmatter matching**: Add a `Project` or `project` field to your file's frontmatter
 2. **Project folder**: Each project rule has a base folder where all project files go
-3. **Sub-rules**: Within each project, you can define moving rules that work just like regular moving rules
+3. **Sub-rules**: Within each project, you can define moving rules that work just like regular moving rules (see [Moving Rules](moving-rules.md) for detailed examples). The only difference is that sub-rules place files within the project folder instead of the vault root.
 4. **Fallback to project root**: If no sub-rule matches, the file is moved to the project root folder
 
 ## Project Rule Precedence
