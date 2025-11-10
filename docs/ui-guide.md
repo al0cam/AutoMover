@@ -69,8 +69,15 @@ Each project rule can be collapsed individually to hide its sub-rules, and the e
 <img width="1531" height="611" alt="image" src="https://github.com/user-attachments/assets/c74d13de-6a2f-48f7-bc48-3e25f0f607e9" />
 
 1. **Add Project rule button**: This button will add a project rule to the list of project rules.
-2. **Delete rule button**: This button will delete the selected rule from the list of rules.
-3. **Duplicate rule button**: This button will duplicate the selected rule from the list of rules.
+2. **Delete rule button**: This button will delete the selected project rule from the list of rules.
+3. **Duplicate rule button**: This button will duplicate the selected project rule from the list of rules.
+4. **Collapse/Expand arrow**: This arrow will collapse or expand the project rule to hide or show its sub-rules.
+5. **Add moving rule button**: This button will add a moving rule to the selected project rule.
+6. **Delete moving rule button**: This button will delete the selected moving rule from the project rule.
+7. **Duplicate moving rule button**: This button will duplicate the selected moving rule
+
+On the picture you can see also an expanded project rule with two moving rules inside it.
+And below it a collapsed project rule.
 
 
 ## Tag Rules UI

@@ -99,7 +99,18 @@ class RuleMatcherUtil {
    */
   public getGroupMatches(file: TFile, rule: MovingRule): RegExpMatchArray | null {
     const regex = this.getCompiledRegex(rule.regex);
+    console.log("Compiled regex: ", regex);
     const matches = file.name.match(regex);
+    return matches;
+  }
+
+  public getGroupMatchesForTags(tags: TagCache[], rule: MovingRule): RegExpMatchArray | null {
+    const regex = this.getCompiledRegex(rule.regex);
+    console.log("Compiled regex: ", regex);
+    for (const tag of tags) {
+      const matches = tag.tag.match(regex);
+    }
+
     return matches;
   }
 
@@ -112,6 +123,7 @@ class RuleMatcherUtil {
    */
   private isValidRegex(pattern: string): boolean {
     try {
+      console.log("Validating regex pattern: ", pattern);
       new RegExp(pattern);
       return true;
     } catch (e) {

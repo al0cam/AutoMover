@@ -1,6 +1,9 @@
 # Project Rules
 
 Project rules allow you to organize files by project using frontmatter metadata. Files with a `Project` or `project` field in their frontmatter will be matched against project rules first, before checking regular moving rules or tag rules.
+For reference, frontmatter refers to the obsidian file properties defined at the top of a note, enclosed within triple dashes (`---`).
+
+Reference to file properties: https://help.obsidian.md/properties
 
 ## How Project Rules Work
 

@@ -146,6 +146,9 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
 
     if (ruleMatcherUtil.isRegexGrouped(tagRule)) {
       const matches = ruleMatcherUtil.getGroupMatches(file, tagRule);
+      console.log("File: ", file.path);
+      console.log("Tag rule: ", tagRule);
+      console.log("Tag matches: ", matches);
       const finalDestinationPath = ruleMatcherUtil.constructFinalDesinationPath(tagRule, matches!);
       movingUtil.moveFile(file, finalDestinationPath);
     } else {
@@ -176,9 +179,9 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
 
     // If no rule matches or folder is "./", move to project root
     if (rule == null || rule.folder === "./") {
-	  console.log("No matching rule or './' destination, moving to project root");
-	  movingUtil.moveFile(file, projectRule.folder);
-	  return true;
+      console.log("No matching rule or './' destination, moving to project root");
+      movingUtil.moveFile(file, projectRule.folder);
+      return true;
     }
 
     // console.log("Project rule's moving rule found: ", rule);
@@ -221,9 +224,21 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
   areThereRulesToApply(): boolean {
     return (
       (this.settings.movingRules.length > 0 &&
-        this.settings.movingRules.every((rule) => rule.regex !== "" && rule.folder !== "")) ||
+        this.settings.movingRules.some((rule) => rule.regex !== "" && rule.folder !== "")) ||
       (this.settings.tagRules.length > 0 &&
-        this.settings.tagRules.every((rule) => rule.regex !== "" && rule.folder !== ""))
+        this.settings.tagRules.some((rule) => rule.regex !== "" && rule.folder !== "")) ||
+      this.areThereProjectRulesToApply()
+    );
+  }
+
+  /**
+   * If there are no project rules to apply, then there is no point in checking for them
+   * @returns boolean
+   */
+  areThereProjectRulesToApply(): boolean {
+    return (
+      this.settings.projectRules.length > 0 &&
+      this.settings.projectRules.some((projectRule) => projectRule.projectName !== "" && projectRule.folder !== "")
     );
   }
 

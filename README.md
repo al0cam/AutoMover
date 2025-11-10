@@ -21,6 +21,7 @@ Therefore, this plugin supports regex and regex groups to create the destination
 
 - [UI Guide](docs/ui-guide.md) - Complete overview of the plugin interface and settings
 - [Moving Rules](docs/moving-rules.md) - Filename-based rules with regex examples
+- [Tag Rules](docs/tag-rules.md) - Filename-based rules with regex examples
 - [Project Rules](docs/project-rules.md) - Organize files by project using frontmatter
 - [Exclusion Rules](docs/exclusion-rules.md) - Protect specific files and folders
 
