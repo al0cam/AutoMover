@@ -146,9 +146,9 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
 
     if (ruleMatcherUtil.isRegexGrouped(tagRule)) {
       const matches = ruleMatcherUtil.getGroupMatchesForTags(tags, tagRule);
-      console.log("File: ", file.path);
-      console.log("Tag rule: ", tagRule);
-      console.log("Tag matches: ", matches);
+      // console.log("File: ", file.path);
+      // console.log("Tag rule: ", tagRule);
+      // console.log("Tag matches: ", matches);
       const finalDestinationPath = ruleMatcherUtil.constructFinalDesinationPath(tagRule, matches!);
       movingUtil.moveFile(file, finalDestinationPath);
     } else {
