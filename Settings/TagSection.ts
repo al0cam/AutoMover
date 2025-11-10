@@ -2,20 +2,36 @@ import { MovingRule } from "Models/MovingRule";
 import * as obsidian from "obsidian";
 import type AutoMoverPlugin from "main";
 
-export function tagSection(
-  containerEl: HTMLElement,
-  plugin: AutoMoverPlugin,
-  display: () => void,
-) {
+export function tagSection(containerEl: HTMLElement, plugin: AutoMoverPlugin, display: () => void) {
+  /**
+   * Debounced save function to avoid excessive disk writes
+   */
+  let saveTimeout: NodeJS.Timeout | null = null;
+  const debouncedSave = () => {
+    if (saveTimeout) clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      plugin.saveData(plugin.settings);
+    }, 500);
+  };
+
   /**
    * Header for excluded folders
    */
   const tagRuleContainer = containerEl.createDiv({
     cls: "moving_rules_container",
   });
-  new obsidian.Setting(tagRuleContainer).setName("Tag rules").setHeading();
 
-  const tagList = tagRuleContainer.createDiv({
+  // Class used from obdsidian's css for consistency
+  const tagRuleDetails = tagRuleContainer.createEl("details", {});
+  tagRuleDetails.createEl("summary", { text: "Tag rules", cls: ["setting-item-heading"] });
+
+  tagRuleDetails.open = !plugin.settings.collapseSections.tagRules;
+  tagRuleDetails.addEventListener("toggle", async () => {
+    plugin.settings.collapseSections.tagRules = !tagRuleDetails.open;
+    await plugin.saveData(plugin.settings);
+  });
+
+  const tagList = tagRuleDetails.createDiv({
     cls: "rule_list",
   });
   const tagHeader = tagList.createDiv({
@@ -45,16 +61,14 @@ export function tagSection(
       cls: "rule_input",
     }).onchange = (e) => {
       rule.regex = (e.target as HTMLInputElement).value;
-      plugin.settings.tagRules.map((r) => (r === rule ? rule : r));
-      plugin.saveData(plugin.settings);
+      debouncedSave();
     };
     child.createEl("input", {
       value: rule.folder,
       cls: "rule_input",
     }).onchange = (e) => {
       rule.folder = (e.target as HTMLInputElement).value;
-      plugin.settings.tagRules.map((r) => (r === rule ? rule : r));
-      plugin.saveData(plugin.settings);
+      debouncedSave();
     };
 
     const duplicateRuleButton = child.createEl("button", {
@@ -71,9 +85,7 @@ export function tagSection(
       cls: "rule_button rule_button_remove",
     });
     deleteRuleButton.addEventListener("click", () => {
-      plugin.settings.tagRules = plugin.settings.tagRules.filter(
-        (r) => r !== rule,
-      );
+      plugin.settings.tagRules = plugin.settings.tagRules.filter((r) => r !== rule);
       display();
     });
   }

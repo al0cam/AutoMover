@@ -3,6 +3,7 @@ import type { TFile } from "obsidian";
 
 class ExclusionMatcherUtil {
   private static instance: ExclusionMatcherUtil;
+  private regexCache: Map<string, RegExp> = new Map();
 
   private constructor() {}
 
@@ -14,6 +15,18 @@ class ExclusionMatcherUtil {
   }
 
   /**
+   * Gets a compiled regex from cache or creates and caches it
+   * @param pattern - The regex pattern string
+   * @returns RegExp
+   */
+  private getCompiledRegex(pattern: string): RegExp {
+    if (!this.regexCache.has(pattern)) {
+      this.regexCache.set(pattern, new RegExp(pattern));
+    }
+    return this.regexCache.get(pattern)!;
+  }
+
+  /**
    * This method is used to check if the file is excluded by the exclusion rule
    * @param file - The file to be checked
    * @param exclusionRules - The exclusion rule to be used
@@ -21,7 +34,7 @@ class ExclusionMatcherUtil {
    */
   isFilePathExcluded(file: TFile, exclusionRules: ExclusionRule[]): boolean {
     for (const rule of exclusionRules) {
-      const regex = new RegExp(rule.regex);
+      const regex = this.getCompiledRegex(rule.regex);
       if (regex.test(file.path)) {
         return true;
       }

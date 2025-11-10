@@ -5,6 +5,8 @@ import { type App, PluginSettingTab, Setting } from "obsidian";
 import { exclusionSection } from "./ExclusionSection";
 import movingRuleSection from "./MovingRuleSection";
 import { tagSection } from "./TagSection";
+import { groupCollapsed } from "console";
+import { projectSection } from "./ProjectSection";
 
 export class SettingsTab extends PluginSettingTab {
   plugin: AutoMoverPlugin;
@@ -102,11 +104,23 @@ export class SettingsTab extends PluginSettingTab {
     const tutorialContainer = containerEl.createDiv({
       cls: "moving_rules_container",
     });
-    new Setting(tutorialContainer).setName("Tutorial").setHeading();
+
+    // Class used from obdsidian's css for consistency
+    const tutorialDetails = tutorialContainer.createEl("details", {});
+    tutorialDetails.createEl("summary", { text: "Tutorial", cls: ["setting-item-heading"] });
+
+    tutorialDetails.open = !this.plugin.settings.collapseSections.tutorial;
+    tutorialDetails.addEventListener("toggle", async () => {
+      this.plugin.settings.collapseSections.tutorial = !tutorialDetails.open;
+      await this.plugin.saveData(this.plugin.settings);
+    });
+
+    const tutorialDetailsContainer = tutorialDetails.createDiv({});
+
     /**
      * Rule description and tutorial
      */
-    const description = tutorialContainer.createDiv();
+    const description = tutorialDetailsContainer.createDiv();
 
     description.createSpan({
       text: "This plugin allows you to move files to a specified folder based on the file name.",
@@ -146,5 +160,6 @@ export class SettingsTab extends PluginSettingTab {
     movingRuleSection(containerEl, this.plugin, this.display);
     tagSection(containerEl, this.plugin, this.display);
     exclusionSection(containerEl, this.plugin, this.display);
+    projectSection(containerEl, this.plugin, this.display);
   };
 }
