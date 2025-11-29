@@ -1,7 +1,7 @@
 # AutoMover Plugin
 
 This plugin is used for designating folders in which your files will be moved automatically.
-It seeks to be an alternative to the "https://github.com/farux/obsidian-auto-note-mover" plugin from farux.
+It seeks to be an alternative to the https://github.com/farux/obsidian-auto-note-mover plugin from farux.
 The problem I had with that plugin was the lack of support for regex and regex groups in the destination paths.
 
 Therefore, this plugin supports regex and regex groups to create the destination paths unless they already exist.
@@ -19,11 +19,11 @@ Therefore, this plugin supports regex and regex groups to create the destination
 
 ## Documentation
 
-- [UI Guide](docs/ui-guide.md) - Complete overview of the plugin interface and settings
-- [Moving Rules](docs/moving-rules.md) - Filename-based rules with regex examples
-- [Tag Rules](docs/tag-rules.md) - Filename-based rules with regex examples
-- [Project Rules](docs/project-rules.md) - Organize files by project using frontmatter
-- [Exclusion Rules](docs/exclusion-rules.md) - Protect specific files and folders
+- [UI Guide](https://github.com/al0cam/AutoMover/blob/master/docs/ui-guide.md) - Complete overview of the plugin interface and settings
+- [Moving Rules](https://github.com/al0cam/AutoMover/blob/master/docs/moving-rules.md) - Filename-based rules with regex examples
+- [Tag Rules](https://github.com/al0cam/AutoMover/blob/master/docs/tag-rules.md) - Filename-based rules with regex examples
+- [Project Rules](https://github.com/al0cam/AutoMover/blob/master/docs/project-rules.md) - Organize files by project using frontmatter
+- [Exclusion Rules](https://github.com/al0cam/AutoMover/blob/master/docs/exclusion-rules.md) - Protect specific files and folders
 
 ## Quick Start
 
