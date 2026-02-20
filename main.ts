@@ -6,6 +6,7 @@ import movingUtil from "Utils/MovingUtil";
 import ruleMatcherUtil from "Utils/RuleMatcherUtil";
 import timerUtil from "Utils/TimerUtil";
 import * as obsidian from "obsidian";
+import projectMatcherUtil from "Utils/ProjectMatcherUtil";
 
 export default class AutoMoverPlugin extends obsidian.Plugin {
   settings: Settings.AutoMoverSettings;
@@ -104,7 +105,8 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    */
   matchAndMoveFile(file: obsidian.TFile): void {
     // console.log("Moving file: ", file.path);
-    if (this.matchAndMoveByName(file)) return;
+    if (this.matchAndMoveByProject(file)) return;
+    else if (this.matchAndMoveByName(file)) return;
     else this.matchAndMoveByTag(file);
   }
 
@@ -143,11 +145,57 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
     if (tagRule == null || tagRule.folder == null) return false;
 
     if (ruleMatcherUtil.isRegexGrouped(tagRule)) {
-      const matches = ruleMatcherUtil.getGroupMatches(file, tagRule);
+      const matches = ruleMatcherUtil.getGroupMatchesForTags(tags, tagRule);
+      // console.log("File: ", file.path);
+      // console.log("Tag rule: ", tagRule);
+      // console.log("Tag matches: ", matches);
       const finalDestinationPath = ruleMatcherUtil.constructFinalDesinationPath(tagRule, matches!);
       movingUtil.moveFile(file, finalDestinationPath);
     } else {
       movingUtil.moveFile(file, tagRule.folder);
+    }
+    return true;
+  }
+
+  matchAndMoveByProject(file: obsidian.TFile): boolean {
+    const cache = this.app.metadataCache.getFileCache(file);
+    if (cache == null) return false;
+    if (cache.frontmatter == null) return false;
+    if (cache.frontmatter.Project == null && cache.frontmatter.project == null) return false;
+
+    const projectName: string = cache.frontmatter.Project || cache.frontmatter.project;
+
+    const projectRule = projectMatcherUtil.getMatchingProjectRule(projectName, this.settings.projectRules);
+    if (projectRule == null || projectRule.folder == null) return false;
+
+    // If no rules defined, move to project root
+    if (projectRule.rules == null || projectRule.rules.length === 0) {
+      console.log("No rules defined, moving to project root");
+      movingUtil.moveFile(file, projectRule.folder);
+      return true;
+    }
+
+    const rule = ruleMatcherUtil.getMatchingRuleByName(file, projectRule.rules);
+
+    // If no rule matches or folder is "./", move to project root
+    if (rule == null || rule.folder === "./") {
+      console.log("No matching rule or './' destination, moving to project root");
+      movingUtil.moveFile(file, projectRule.folder);
+      return true;
+    }
+
+    // console.log("Project rule's moving rule found: ", rule);
+
+    if (ruleMatcherUtil.isRegexGrouped(rule)) {
+      const matches = ruleMatcherUtil.getGroupMatches(file, rule);
+      const ruleDesinationPath = ruleMatcherUtil.constructFinalDesinationPath(rule, matches!);
+      const finalDestinationPath = projectMatcherUtil.constructProjectDestinationPath(projectRule, ruleDesinationPath);
+
+      movingUtil.moveFile(file, finalDestinationPath);
+    } else {
+      const finalDestinationPath = projectMatcherUtil.constructProjectDestinationPath(projectRule, rule.folder);
+
+      movingUtil.moveFile(file, finalDestinationPath);
     }
     return true;
   }
@@ -176,9 +224,21 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
   areThereRulesToApply(): boolean {
     return (
       (this.settings.movingRules.length > 0 &&
-        this.settings.movingRules.every((rule) => rule.regex !== "" && rule.folder !== "")) ||
+        this.settings.movingRules.some((rule) => rule.regex !== "" && rule.folder !== "")) ||
       (this.settings.tagRules.length > 0 &&
-        this.settings.tagRules.every((rule) => rule.regex !== "" && rule.folder !== ""))
+        this.settings.tagRules.some((rule) => rule.regex !== "" && rule.folder !== "")) ||
+      this.areThereProjectRulesToApply()
+    );
+  }
+
+  /**
+   * If there are no project rules to apply, then there is no point in checking for them
+   * @returns boolean
+   */
+  areThereProjectRulesToApply(): boolean {
+    return (
+      this.settings.projectRules.length > 0 &&
+      this.settings.projectRules.some((projectRule) => projectRule.projectName !== "" && projectRule.folder !== "")
     );
   }
 
