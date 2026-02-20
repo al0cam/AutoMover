@@ -3,7 +3,7 @@
   "name": "AutoMover",
   "version": "1.0.6",
   "minAppVersion": "0.15.0",
-  "description": "Moves files with specified names into the same folder.",
+  "description": "Move files and notes with specified names into their designated folders according to rules you define.",
   "author": "Al0cam",
   "authorUrl": "https://github.com/al0cam",
   "fundingUrl": "",

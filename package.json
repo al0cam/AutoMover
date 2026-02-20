@@ -1,7 +1,7 @@
 {
   "name": "AutoMover",
   "version": "1.0.6",
-  "description": "AutoMover: Moves files with specified names/tags where you want.",
+  "description": "AutoMover: Move files and notes with specified names into their designated folders according to rules you define.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
