@@ -9,6 +9,16 @@ import timerUtil from "Utils/TimerUtil";
 import * as obsidian from "obsidian";
 import projectMatcherUtil from "Utils/ProjectMatcherUtil";
 
+declare module "obsidian" {
+  interface Workspace {
+    on(
+      name: "AutoMover:automatic-moving-update",
+      callback: () => void,
+      ctx?: unknown,
+    ): EventRef;
+  }
+}
+
 export default class AutoMoverPlugin extends obsidian.Plugin {
   settings: Settings.AutoMoverSettings;
 
@@ -51,7 +61,6 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
     );
 
     this.registerEvent(
-      // since i am defining my own event, ts-lint is crying about it but it works in the end
       this.app.workspace.on("AutoMover:automatic-moving-update", () => {
         loggerUtil.debug("Automatic moving update");
         this.automaticMoving();

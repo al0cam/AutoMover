@@ -45,29 +45,21 @@ class SettingsIO {
 
       const settingsData = JSON.stringify(settings, null, 2);
 
-      const electron = (window as any).require
-        ? (window as any).require("electron")
-        : null;
-      const remote = electron ? electron.remote : null;
-
-      if (!remote || !remote.dialog) {
-        // Fall back to saving in vault if Electron APIs are not available
+      if (!this.canUseBrowserDownload()) {
+        // Fall back to saving in vault if the download API is not available
         return this.exportToVault(settingsData);
       }
 
-      const { canceled, filePath } = await remote.dialog.showSaveDialog({
-        title: "Export AutoMover Settings",
-        defaultPath: "AutoMover_settings.json",
-        filters: [{ name: "JSON Files", extensions: ["json"] }],
-        properties: ["createDirectory"],
-      });
-
-      if (canceled || !filePath) {
-        return false;
-      }
-
-      const fs = require("node:fs");
-      fs.writeFileSync(filePath, settingsData);
+      const blob = new Blob([settingsData], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "AutoMover_settings.json";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      // Revoking straight away can cancel the download in some browsers.
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 
       loggerUtil.infoNotice("Settings exported successfully");
       return true;
@@ -107,28 +99,16 @@ class SettingsIO {
         throw new Error("App reference not set");
       }
 
-      const electron = (window as any).require
-        ? (window as any).require("electron")
-        : null;
-      const remote = electron ? electron.remote : null;
-
-      if (!remote || !remote.dialog) {
-        // Fall back to importing from vault if Electron APIs are not available
+      if (!this.canUseFilePicker()) {
+        // Fall back to importing from vault if the file picker is not available
         return this.importFromVault();
       }
 
-      const { canceled, filePaths } = await remote.dialog.showOpenDialog({
-        title: "Import AutoMover Settings",
-        filters: [{ name: "JSON Files", extensions: ["json"] }],
-        properties: ["openFile"],
-      });
+      const fileContent = await this.pickJsonFile();
 
-      if (canceled || !filePaths || filePaths.length === 0) {
+      if (fileContent === null) {
         return null;
       }
-
-      const fs = require("node:fs");
-      const fileContent = fs.readFileSync(filePaths[0], "utf8");
 
       const importedSettings = JSON.parse(fileContent);
 
@@ -175,6 +155,69 @@ class SettingsIO {
       loggerUtil.errorNotice("Failed to import settings from vault", error);
       return null;
     }
+  }
+
+  /**
+   * Checks whether the environment can trigger a file download from the browser.
+   *
+   * @returns True if a blob download can be started, false otherwise.
+   */
+  private canUseBrowserDownload(): boolean {
+    return typeof URL !== "undefined" && typeof URL.createObjectURL === "function" && typeof document !== "undefined";
+  }
+
+  /**
+   * Checks whether the environment can open a native file picker.
+   *
+   * @returns True if a file input can be used, false otherwise.
+   */
+  private canUseFilePicker(): boolean {
+    return typeof document !== "undefined" && typeof Blob !== "undefined" && typeof Blob.prototype.text === "function";
+  }
+
+  /**
+   * Opens a file picker and reads the chosen JSON file as text.
+   *
+   * @returns The file contents, or null if the user cancelled.
+   */
+  private pickJsonFile(): Promise<string | null> {
+    return new Promise((resolve) => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "application/json,.json";
+      input.style.display = "none";
+
+      const cleanup = () => {
+        input.remove();
+      };
+
+      input.addEventListener("change", async () => {
+        const file = input.files?.[0];
+        if (!file) {
+          cleanup();
+          resolve(null);
+          return;
+        }
+
+        try {
+          resolve(await file.text());
+        } catch (error) {
+          loggerUtil.errorNotice("Failed to read settings file", error);
+          resolve(null);
+        } finally {
+          cleanup();
+        }
+      });
+
+      // Fires when the picker is dismissed without a selection.
+      input.addEventListener("cancel", () => {
+        cleanup();
+        resolve(null);
+      });
+
+      document.body.appendChild(input);
+      input.click();
+    });
   }
 
   /**
