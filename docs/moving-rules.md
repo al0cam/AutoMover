@@ -4,6 +4,7 @@
 
 #### Important note 1: The text is case sensitive.
 #### Important note 2: Use the "/" character to separate folders.
+#### Important note 3: The rule is matched against the full file name including its extension. A note shown as "Scroll 1" in the explorer is really "Scroll 1.md", so to anchor on the end of a note name use `\.md$`, for example `Scroll 1\.md$`.
 #### Writing Regex: The best tool for writing regex is Regex101 (https://regex101.com/)
 
 ## Examples without Regex
