@@ -38,6 +38,13 @@ class TimerUtil {
     // console.log("Starting timer with interval: ", interval);
     this.timer = setTimeout(callback, interval);
   }
+
+  stopTimer() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  }
 }
 
 const timerUtil = TimerUtil.getInstance();
