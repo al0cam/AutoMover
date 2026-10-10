@@ -42,13 +42,12 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
 
     this.automaticMoving();
 
-    // negative ifs for easier reading and debugging
-    if (!this.areMovingTriggersEnabled()) return;
-    if (!this.areThereRulesToApply()) return;
-
+    // Handlers are always registered and check settings when they fire,
+    // so rules and triggers changed in the settings tab apply without a reload.
     this.registerEvent(
       this.app.workspace.on("file-open", async (file: obsidian.TFile) => {
         if (!this.settings.moveOnOpen) return;
+        if (!this.areThereRulesToApply()) return;
         if (file == null || file.path == null) return;
         if (this.isFileExcluded(file)) return;
         const result = await this.matchAndMoveFile(file);
@@ -268,15 +267,7 @@ export default class AutoMoverPlugin extends obsidian.Plugin {
    */
   async onunload() {
     // console.log("unloading plugin");
-  }
-
-  /**
-   * No point in doing anything if there is no trigger set which will cause you to move the files
-   * @returns boolean
-   */
-  areMovingTriggersEnabled(): boolean {
-    return this.settings.moveOnOpen;
-    // || this.settings.moveOnSave
+    timerUtil.stopTimer();
   }
 
   /**
